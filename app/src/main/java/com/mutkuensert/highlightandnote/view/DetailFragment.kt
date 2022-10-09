@@ -8,14 +8,17 @@ import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.databinding.FragmentDetailBinding
 import com.mutkuensert.highlightandnote.model.NoteClass
 import com.mutkuensert.highlightandnote.service.SingletonClass
+import com.mutkuensert.highlightandnote.util.FROM_APP_AND_NEW_BUTTON
+import com.mutkuensert.highlightandnote.util.FROM_APP_AND_RECYCLERVIEW
+import com.mutkuensert.highlightandnote.util.FROM_INTENT_AND_RECYCLERVIEW
+import com.mutkuensert.highlightandnote.util.FROM_INTENT_AND_SNACKBAR_NEW_BUTTON
 import com.mutkuensert.highlightandnote.viewmodel.DetailFragmentViewModel
 
 
@@ -23,10 +26,7 @@ class DetailFragment : Fragment() {
     private var _binding : FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel : DetailFragmentViewModel
-    private var kaynak : Int = 0
-    private var noteId : Int = 0
-    private var textControl : Int = 0
-    private lateinit var recyclerdanGelenNot : NoteClass
+    private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,6 @@ class DetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -45,100 +44,80 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        menuleriAyarla()
-        val singleton = SingletonClass.AlinanText
-        geriTusuAyarlari()
-        argumanlariAl(singleton)
+        setMenu()
+        setBackButtonCallback()
+        getNoteOrReceivedTextToScreen()
     }
 
-    fun geriTusuAyarlari(){
+    private fun setBackButtonCallback(){
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            if(kaynak == 0 || kaynak ==2){
-                if(textControl==0){
-                    if(binding.editText.text.isNotEmpty()){
-                        val yeniNot = NoteClass(binding.editText.text.toString())
-                        viewModel.yeniKayit(yeniNot)
-                        Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                        val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                        findNavController().navigate(action)
-                    }else{
-                        val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                        findNavController().navigate(action)
-                    }
-                }else if (textControl == 1){
-                    val yeniNot = NoteClass(binding.editText.text.toString())
-                    viewModel.yeniKayit(yeniNot)
-                    Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                    activity?.let {
-                        it.finish()
-                    }
-                }
-            }else if(kaynak==1){//recyclerviewdan gelinirse güncellenecek
-                if(textControl==0){
-                    recyclerdanGelenNot = NoteClass(binding.editText.text.toString())
-                    recyclerdanGelenNot.uid=noteId
-                    viewModel.kayitGuncelle(recyclerdanGelenNot)
-                    Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                    val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                    findNavController().navigate(action)
-                }else if(textControl==1){
-                    val yeniNot = NoteClass(binding.editText.text.toString())
-                    yeniNot.uid=noteId
-                    viewModel.kayitGuncelle(yeniNot)
-                    Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                    activity?.let {
-                        it.finish()
-                    }
-                }
 
+            if(args.source == FROM_APP_AND_NEW_BUTTON){
+                if(binding.editText.text.isNotEmpty()){
+                    val newNote = NoteClass(binding.editText.text.toString())
+                    viewModel.newNote(newNote)
+                    Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                }
+                val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
+                findNavController().navigate(action)
+
+            }else if(args.source == FROM_APP_AND_RECYCLERVIEW){
+                val noteFromRecyclerView = NoteClass(binding.editText.text.toString())
+                noteFromRecyclerView.uid = args.noteId
+                viewModel.updateNote(noteFromRecyclerView)
+                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
+                findNavController().navigate(action)
+
+            }else if(args.source == FROM_INTENT_AND_SNACKBAR_NEW_BUTTON){
+                val newNote = NoteClass(binding.editText.text.toString())
+                viewModel.newNote(newNote)
+                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                activity?.finish()
+
+            }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
+                val newNote = NoteClass(binding.editText.text.toString())
+                newNote.uid = args.noteId
+                viewModel.updateNote(newNote)
+                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                activity?.finish()
             }
-
         }
         callback.isEnabled
     }
 
-    fun argumanlariAl(singleton: SingletonClass.AlinanText){
-        arguments?.let {
-            noteId = DetailFragmentArgs.fromBundle(it).noteId
-            textControl = DetailFragmentArgs.fromBundle(it).textAlinacak
-            kaynak = DetailFragmentArgs.fromBundle(it).kaynakKontrolu
+    private fun getNoteOrReceivedTextToScreen(){
 
-            if(kaynak == 0 && textControl == 1){//menüden yeni kayıt
-                binding.editText.setText(singleton.alinanText)
-                //textcontrol 0 ise bir şey yapmaya gerek yok
-            }else if (kaynak==1){//recyclerviewdan gelindiyse
-                recyclerdanGelenNot = NoteClass(binding.editText.text.toString())
-                viewModel.kayitGetir(noteId)
-                if(textControl==0) {
-                    viewModel.note.observe(viewLifecycleOwner, Observer {
-                        binding.editText.setText(it.note)
-                    })
-                }else if(textControl==1){
-                    viewModel.note.observe(viewLifecycleOwner, Observer {
-                        val notveText = it.note + "\n" + "\n${singleton.alinanText}"
-                        binding.editText.setText(notveText)
-                    })
-                }
-            }else if (kaynak == 2){
-                binding.editText.setText(singleton.alinanText)
+        if(args.source == FROM_INTENT_AND_SNACKBAR_NEW_BUTTON){
+            binding.editText.setText(SingletonClass.receivedText)
+
+        }else if (args.source == FROM_APP_AND_RECYCLERVIEW){
+            viewModel.getNote(args.noteId)
+            viewModel.note.observe(viewLifecycleOwner) {
+                binding.editText.setText(it.note)
             }
-
+        }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
+                viewModel.note.observe(viewLifecycleOwner) {
+                    val oldNoteAndNewText = it.note + "\n" + "\n${SingletonClass.receivedText}"
+                    binding.editText.setText(oldNoteAndNewText)
+                }
+            }
         }
-    }
 
-    private fun menuleriAyarla(){
+
+    private fun setMenu(){
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object: MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 if(!menu.hasVisibleItems()){menuInflater.inflate(R.menu.optionsmenu,menu)}
-                menu.findItem(R.id.silMenu).setVisible(true)
-                menu.findItem(R.id.yeniKayit).setVisible(false)
+                menu.findItem(R.id.deleteNote).isVisible = true
+                menu.findItem(R.id.newNote).isVisible = false
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                if (menuItem.itemId == R.id.silMenu) {
-                    if (kaynak == 1) { //recyclerview'den gelindiyse kaydı sil. Yeni bir girdi ise zaten silinecek kayıt yok.
-                        viewModel.kayitSil(viewModel.note.value!!)
+                if (menuItem.itemId == R.id.deleteNote) {
+                    if (args.source == FROM_APP_AND_RECYCLERVIEW || args.source == FROM_INTENT_AND_RECYCLERVIEW) {
+                        viewModel.deleteNote(viewModel.note.value!!)
                         Toast.makeText(context,R.string.note_deleted,Toast.LENGTH_SHORT).show()
                     }
                     val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()

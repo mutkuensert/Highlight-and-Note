@@ -6,9 +6,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.mutkuensert.highlightandnote.databinding.NotesRowBinding
 import com.mutkuensert.highlightandnote.model.NoteClass
+import com.mutkuensert.highlightandnote.util.FROM_APP_AND_RECYCLERVIEW
+import com.mutkuensert.highlightandnote.util.FROM_INTENT_AND_RECYCLERVIEW
 import com.mutkuensert.highlightandnote.view.MainFragmentDirections
 
-class NotesRecyclerAdapter(val notlar : ArrayList<NoteClass>, var textControl : Int) : RecyclerView.Adapter<NotesRecyclerAdapter.NotesViewHolder>(){
+class NotesRecyclerAdapter(val notes : ArrayList<NoteClass>) : RecyclerView.Adapter<NotesRecyclerAdapter.NotesViewHolder>(){
+    var fromIntentOrApp: Int = FROM_APP_AND_RECYCLERVIEW
     class NotesViewHolder(val binding : NotesRowBinding): RecyclerView.ViewHolder(binding.root) {
     }
 
@@ -18,28 +21,32 @@ class NotesRecyclerAdapter(val notlar : ArrayList<NoteClass>, var textControl : 
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val not = notlar.get(position).note
-        if(not!!.length > 300){
-            holder.binding.textView.text = not.subSequence(0,300).toString() + "..."
+        val note = notes.get(position).note
+        if(note!!.length > 300){
+            holder.binding.textView.text = note.subSequence(0,300).toString() + "..."
         }else {
-            holder.binding.textView.text = notlar.get(position).note
+            holder.binding.textView.text = notes.get(position).note
         }
         holder.itemView.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(notlar.get(position).uid,textControl,1)
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(notes.get(position).uid, fromIntentOrApp)
             Navigation.findNavController(it).navigate(action)
         }
     }
 
     override fun getItemCount(): Int {
-        return notlar.size
+        return notes.size
     }
-    fun textControlFun(onay: Int){
-        textControl = onay
+    fun appHasBeenExecutedByIntent(isTrue: Boolean){
+        if(isTrue){
+            fromIntentOrApp = FROM_INTENT_AND_RECYCLERVIEW
+        }else{
+            fromIntentOrApp = FROM_APP_AND_RECYCLERVIEW
+        }
     }
 
-    fun recycleraGonder(yeniNotListesi : List<NoteClass>){
-        notlar.clear()
-        notlar.addAll(yeniNotListesi)
+    fun submitList(newListOfNote : List<NoteClass>){
+        notes.clear()
+        notes.addAll(newListOfNote)
         notifyDataSetChanged()
     }
 }

@@ -8,9 +8,7 @@ import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +16,8 @@ import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.adapter.NotesRecyclerAdapter
 import com.mutkuensert.highlightandnote.databinding.FragmentMainBinding
 import com.mutkuensert.highlightandnote.service.SingletonClass
+import com.mutkuensert.highlightandnote.util.FROM_APP_AND_NEW_BUTTON
+import com.mutkuensert.highlightandnote.util.FROM_INTENT_AND_SNACKBAR_NEW_BUTTON
 import com.mutkuensert.highlightandnote.viewmodel.MainFragmentViewModel
 
 
@@ -25,7 +25,7 @@ class MainFragment : Fragment() {
     private var _binding : FragmentMainBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel : MainFragmentViewModel
-    private val recyclerAdapter = NotesRecyclerAdapter(arrayListOf(), 0)
+    private val recyclerAdapter = NotesRecyclerAdapter(arrayListOf())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,6 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -45,51 +44,69 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        menuleriAyarla()
+        setMenus()
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            activity?.let {
-                it.finish()
-            }
+            activity?.finish()
         }
         callback.isEnabled
 
         binding.recycler.layoutManager = LinearLayoutManager(context)
         binding.recycler.adapter = recyclerAdapter
-        viewModel.notlariGetir()
+        viewModel.getNotes()
         observeLiveData()
+        checkIntent()
 
-        val singleton = SingletonClass.AlinanText
-        if(singleton.kontrol == 1){
-            recyclerAdapter.textControlFun(1)
-            val sbar = Snackbar.make(binding.root, R.string.snack_message,Snackbar.LENGTH_INDEFINITE).setAction(R.string.menu_new,View.OnClickListener {
-                val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0,1,2)
-                findNavController().navigate(action)
-            })
-            sbar.show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+    private fun askToCreateNewNoteWithTheReceivedText(){
+        recyclerAdapter.appHasBeenExecutedByIntent(true)
+        val sbar = Snackbar.make(binding.root, R.string.snack_message,Snackbar.LENGTH_INDEFINITE).setAction(R.string.menu_new) {
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0, FROM_INTENT_AND_SNACKBAR_NEW_BUTTON) //Note id is 0 because a new note is going to be created.
+            findNavController().navigate(action)
         }
-
+        sbar.show()
     }
 
-    fun observeLiveData(){
-        viewModel.notes.observe(viewLifecycleOwner, Observer {
-            recyclerAdapter.recycleraGonder(it)
-        })
+    private fun checkIntent(){
+        if(requireActivity().intent.action != null &&
+            (requireActivity().intent.action.equals(Intent.ACTION_PROCESS_TEXT) || requireActivity().intent.action.equals(Intent.ACTION_SEND))){
+
+            if(requireActivity().intent.hasExtra(Intent.EXTRA_PROCESS_TEXT)){
+                SingletonClass.receivedText = requireActivity().intent.getStringExtra(Intent.EXTRA_PROCESS_TEXT)
+                askToCreateNewNoteWithTheReceivedText()
+            }else if (requireActivity().intent.hasExtra(Intent.EXTRA_TEXT)){
+                SingletonClass.receivedText = requireActivity().intent.getStringExtra(Intent.EXTRA_TEXT)
+                askToCreateNewNoteWithTheReceivedText()
+            }
+        }
     }
 
-    private fun menuleriAyarla(){
+
+    private fun observeLiveData(){
+        viewModel.notes.observe(viewLifecycleOwner) {
+            recyclerAdapter.submitList(it)
+        }
+    }
+
+
+    private fun setMenus(){
         val menuHost: MenuHost = requireActivity()
 
         menuHost.addMenuProvider(object: MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 if(!menu.hasVisibleItems()){menuInflater.inflate(R.menu.optionsmenu,menu)}
-                menu.findItem(R.id.yeniKayit).setVisible(true)
-                menu.findItem(R.id.silMenu).setVisible(false)
+                menu.findItem(R.id.newNote).isVisible = true
+                menu.findItem(R.id.deleteNote).isVisible = false
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                if(menuItem.itemId == R.id.yeniKayit){
-                    val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0,0,0)
+                if(menuItem.itemId == R.id.newNote){
+                    val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0, FROM_APP_AND_NEW_BUTTON) //noteId is 0 because this is not an existing note.
                     findNavController().navigate(action)
                 }
                 return true
@@ -98,8 +115,5 @@ class MainFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

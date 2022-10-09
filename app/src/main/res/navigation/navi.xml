@@ -27,11 +27,7 @@
             app:argType="integer"
             android:defaultValue="0" />
         <argument
-            android:name="textAlinacak"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="kaynakKontrolu"
+            android:name="source"
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>

@@ -16,7 +16,7 @@ interface NoteDAO {
     suspend fun insert(vararg notes : NoteClass)
 
     @Update
-    suspend fun guncelle(vararg not : NoteClass)
+    suspend fun update(vararg note : NoteClass)
 
     @Delete
     suspend fun delete(note : NoteClass)

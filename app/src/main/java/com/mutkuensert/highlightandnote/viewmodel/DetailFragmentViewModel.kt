@@ -14,25 +14,25 @@ class DetailFragmentViewModel(application: Application): BaseViewModel(applicati
     val note = MutableLiveData<NoteClass>()
 
 
-    fun kayitSil(not: NoteClass){
+    fun deleteNote(note: NoteClass){
         launch {
-            dao.delete(not)
+            dao.delete(note)
         }
     }
-    fun kayitGetir(id: Int){
+    fun getNote(id: Int){
         launch {
             note.value =dao.loadById(id)
         }
     }
-    fun yeniKayit(not : NoteClass){
+    fun newNote(note : NoteClass){
         launch {
-            dao.insert(not)
+            dao.insert(note)
         }
     }
 
-    fun kayitGuncelle(not : NoteClass){
+    fun updateNote(note : NoteClass){
         launch {
-            dao.guncelle(not)
+            dao.update(note)
         }
     }
 

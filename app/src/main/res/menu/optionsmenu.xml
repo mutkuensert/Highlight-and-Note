@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/yeniKayit"
+        android:id="@+id/newNote"
         android:icon="@drawable/ic_add"
         android:title="@string/menu_new"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/silMenu"
+        android:id="@+id/deleteNote"
         android:icon="@drawable/ic_delete"
         android:title="@string/menu_del"
         app:showAsAction="always"/>

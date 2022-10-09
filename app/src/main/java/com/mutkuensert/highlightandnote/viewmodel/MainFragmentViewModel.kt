@@ -14,7 +14,7 @@ class MainFragmentViewModel(application: Application) : BaseViewModel(applicatio
     val dao = NoteDatabase(application).noteDao()
 
 
-    fun notlariGetir (){
+    fun getNotes(){
         launch {
             notes.value = dao.getAll()
         }
