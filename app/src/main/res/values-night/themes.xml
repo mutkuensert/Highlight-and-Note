@@ -16,5 +16,6 @@
         <item name="rowcolor">#1600AFFF</item>
         <item name="textcolor">#D5D5D5</item>
         <item name="notestroke">#f5f5f5</item>
+        <item name="iconTint">#FFFFFF</item>
     </style>
 </resources>

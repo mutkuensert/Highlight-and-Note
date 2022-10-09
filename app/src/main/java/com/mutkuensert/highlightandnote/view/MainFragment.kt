@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mutkuensert.highlightandnote.R
@@ -26,7 +30,6 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         viewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
     }
 
@@ -42,6 +45,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        menuleriAyarla()
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
             activity?.let {
@@ -60,7 +64,7 @@ class MainFragment : Fragment() {
             recyclerAdapter.textControlFun(1)
             val sbar = Snackbar.make(binding.root, R.string.snack_message,Snackbar.LENGTH_INDEFINITE).setAction(R.string.menu_new,View.OnClickListener {
                 val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0,1,2)
-                Navigation.findNavController(binding.root).navigate(action)
+                findNavController().navigate(action)
             })
             sbar.show()
         }
@@ -73,24 +77,27 @@ class MainFragment : Fragment() {
         })
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        val silItem = menu.findItem(R.id.silMenu)
-        silItem.setVisible(false)
+    private fun menuleriAyarla(){
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(object: MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if(!menu.hasVisibleItems()){menuInflater.inflate(R.menu.optionsmenu,menu)}
+                menu.findItem(R.id.yeniKayit).setVisible(true)
+                menu.findItem(R.id.silMenu).setVisible(false)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if(menuItem.itemId == R.id.yeniKayit){
+                    val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0,0,0)
+                    findNavController().navigate(action)
+                }
+                return true
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.optionsmenu,menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.yeniKayit){
-            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0,0,0)
-            Navigation.findNavController(binding.root).navigate(action)
-        }
-        return super.onOptionsItemSelected(item)
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

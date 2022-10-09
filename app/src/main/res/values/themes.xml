@@ -15,5 +15,6 @@
         <item name="rowcolor">#DAEFEFEF</item>
         <item name="textcolor">#000000</item>
         <item name="notestroke">#3F51B5</item>
+        <item name="iconTint">#DAEFEFEF</item>
     </style>
 </resources>

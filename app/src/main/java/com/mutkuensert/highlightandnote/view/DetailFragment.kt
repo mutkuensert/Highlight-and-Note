@@ -5,9 +5,13 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.databinding.FragmentDetailBinding
 import com.mutkuensert.highlightandnote.model.NoteClass
@@ -26,7 +30,6 @@ class DetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         viewModel = ViewModelProvider(this).get(DetailFragmentViewModel::class.java)
     }
 
@@ -42,6 +45,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        menuleriAyarla()
         val singleton = SingletonClass.AlinanText
         geriTusuAyarlari()
         argumanlariAl(singleton)
@@ -56,10 +60,10 @@ class DetailFragment : Fragment() {
                         viewModel.yeniKayit(yeniNot)
                         Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
                         val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                        Navigation.findNavController(binding.root).navigate(action)
+                        findNavController().navigate(action)
                     }else{
                         val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                        Navigation.findNavController(binding.root).navigate(action)
+                        findNavController().navigate(action)
                     }
                 }else if (textControl == 1){
                     val yeniNot = NoteClass(binding.editText.text.toString())
@@ -76,7 +80,7 @@ class DetailFragment : Fragment() {
                     viewModel.kayitGuncelle(recyclerdanGelenNot)
                     Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
                     val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                    Navigation.findNavController(binding.root).navigate(action)
+                    findNavController().navigate(action)
                 }else if(textControl==1){
                     val yeniNot = NoteClass(binding.editText.text.toString())
                     yeniNot.uid=noteId
@@ -122,30 +126,28 @@ class DetailFragment : Fragment() {
         }
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        val silItem = menu.findItem(R.id.silMenu)
-        val yeniKayitItem = menu.findItem(R.id.yeniKayit)
-        yeniKayitItem.setVisible(false)
-        silItem.setVisible(true)
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.optionsmenu,menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.silMenu) {
-            if (kaynak == 1) {
-                viewModel.kayitSil(viewModel.note.value!!)
-                Toast.makeText(context,R.string.note_deleted,Toast.LENGTH_SHORT).show()
+    private fun menuleriAyarla(){
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object: MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if(!menu.hasVisibleItems()){menuInflater.inflate(R.menu.optionsmenu,menu)}
+                menu.findItem(R.id.silMenu).setVisible(true)
+                menu.findItem(R.id.yeniKayit).setVisible(false)
             }
-            val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-            Navigation.findNavController(binding.root).navigate(action)
-        }
-        return super.onOptionsItemSelected(item)
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.silMenu) {
+                    if (kaynak == 1) { //recyclerview'den gelindiyse kaydı sil. Yeni bir girdi ise zaten silinecek kayıt yok.
+                        viewModel.kayitSil(viewModel.note.value!!)
+                        Toast.makeText(context,R.string.note_deleted,Toast.LENGTH_SHORT).show()
+                    }
+                    val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
+                    findNavController().navigate(action)
+                }
+                return true
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onDestroyView() {
