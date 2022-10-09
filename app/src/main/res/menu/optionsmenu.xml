@@ -5,10 +5,12 @@
         android:id="@+id/newNote"
         android:icon="@drawable/ic_add"
         android:title="@string/menu_new"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:contentDescription="@string/new_note_icon_button_content_description"/>
     <item
         android:id="@+id/deleteNote"
         android:icon="@drawable/ic_delete"
         android:title="@string/menu_del"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:contentDescription="@string/delete_note_icon_button_content_description"/>
 </menu>
