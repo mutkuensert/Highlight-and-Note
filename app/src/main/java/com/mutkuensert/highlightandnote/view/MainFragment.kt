@@ -38,6 +38,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.createDataAccessObject(requireContext())
+
         setMenus()
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -47,7 +49,9 @@ class MainFragment : Fragment() {
 
         binding.recycler.layoutManager = LinearLayoutManager(context)
         binding.recycler.adapter = recyclerAdapter
+
         viewModel.getNotes()
+
         observeLiveData()
         checkIntent()
 
