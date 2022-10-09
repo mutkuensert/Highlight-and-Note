@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mutkuensert.highlightandnote.R
@@ -25,13 +25,8 @@ import com.mutkuensert.highlightandnote.viewmodel.DetailFragmentViewModel
 class DetailFragment : Fragment() {
     private var _binding : FragmentDetailBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : DetailFragmentViewModel
+    private val viewModel: DetailFragmentViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailFragmentViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

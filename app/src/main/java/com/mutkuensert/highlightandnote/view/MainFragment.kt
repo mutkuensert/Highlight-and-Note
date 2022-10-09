@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -24,14 +24,8 @@ import com.mutkuensert.highlightandnote.viewmodel.MainFragmentViewModel
 class MainFragment : Fragment() {
     private var _binding : FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : MainFragmentViewModel
+    private val viewModel: MainFragmentViewModel by viewModels()
     private val recyclerAdapter = NotesRecyclerAdapter(arrayListOf())
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainFragmentViewModel::class.java)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
