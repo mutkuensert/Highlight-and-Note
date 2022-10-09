@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DetailFragment"
+    android:fillViewport="true">
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/notehint"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textMultiLine"
+                android:textSize="16sp"
+                tools:layout_editor_absoluteY="15dp" />
+    </ScrollView>

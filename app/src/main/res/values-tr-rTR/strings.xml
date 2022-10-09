@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_new">Yeni</string>
+    <string name="menu_del">Sil</string>
+    <string name="snack_message">Metin ile yeni not oluşturulsun mu?</string>
+    <string name="note_saved">Not kaydedildi.</string>
+    <string name="note_deleted">Not silindi.</string>
+    <string name="notehint">Not</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">Highlight &amp; Note</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="menu_new">New</string>
+    <string name="menu_del">Delete</string>
+    <string name="snack_message">Create a new note with the text?</string>
+    <string name="note_saved">Note saved.</string>
+    <string name="note_deleted">Note deleted.</string>
+    <string name="notehint">Note</string>
+
+</resources>
