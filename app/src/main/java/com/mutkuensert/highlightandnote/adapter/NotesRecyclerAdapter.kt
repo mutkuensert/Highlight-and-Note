@@ -21,12 +21,8 @@ class NotesRecyclerAdapter(val notes : ArrayList<NoteClass>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val note = notes.get(position).note
-        if(note!!.length > 300){
-            holder.binding.textView.text = note.subSequence(0,300).toString() + "..."
-        }else {
-            holder.binding.textView.text = notes.get(position).note
-        }
+        holder.binding.textView.text = notes.get(position).note
+
         holder.itemView.setOnClickListener {
             val action = MainFragmentDirections.actionMainFragmentToDetailFragment(notes.get(position).uid, fromIntentOrApp)
             Navigation.findNavController(it).navigate(action)

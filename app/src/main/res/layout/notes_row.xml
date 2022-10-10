@@ -18,5 +18,6 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="15sp"
+        android:maxLines="4"
         android:textColor="?attr/textcolor"/>
 </LinearLayout>
