@@ -94,10 +94,11 @@ class DetailFragment : Fragment() {
                 binding.editText.setText(it.note)
             }
         }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
-                viewModel.note.observe(viewLifecycleOwner) {
-                    val oldNoteAndNewText = it.note + "\n" + "\n${SingletonClass.receivedText}"
-                    binding.editText.setText(oldNoteAndNewText)
-                }
+            viewModel.getNote(args.noteId)
+            viewModel.note.observe(viewLifecycleOwner) {
+                val oldNoteAndNewText = it.note + "\n" + "\n${SingletonClass.receivedText}"
+                binding.editText.setText(oldNoteAndNewText)
+            }
             }
         }
 
