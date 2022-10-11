@@ -26,6 +26,7 @@ class MainFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MainFragmentViewModel by viewModels()
     private val recyclerAdapter = NotesRecyclerAdapter(arrayListOf())
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,15 +60,16 @@ class MainFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        snackBar?.dismiss()
         _binding = null
     }
     private fun askToCreateNewNoteWithTheReceivedText(){
         recyclerAdapter.appHasBeenExecutedByIntent(true)
-        val sbar = Snackbar.make(binding.root, R.string.snack_message,Snackbar.LENGTH_INDEFINITE).setAction(R.string.menu_new) {
+        snackBar = Snackbar.make(binding.root, R.string.snack_message,Snackbar.LENGTH_INDEFINITE).setAction(R.string.menu_new) {
             val action = MainFragmentDirections.actionMainFragmentToDetailFragment(0, FROM_INTENT_AND_SNACKBAR_NEW_BUTTON) //Note id is 0 because a new note is going to be created.
             findNavController().navigate(action)
         }
-        sbar.show()
+        snackBar!!.show()
     }
 
     private fun checkIntent(){
