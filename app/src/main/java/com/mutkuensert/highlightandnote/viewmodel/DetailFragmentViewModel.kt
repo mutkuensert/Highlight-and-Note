@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 class DetailFragmentViewModel: ViewModel() {
     lateinit var dao: NoteDAO
     val note = MutableLiveData<NoteClass>()
+    val processIsDone = MutableLiveData<Boolean>(false)
 
     fun createDataAccessObject(context: Context){
         dao = NoteDatabase(context).noteDao()
@@ -22,6 +23,7 @@ class DetailFragmentViewModel: ViewModel() {
     fun deleteNote(note: NoteClass){
         viewModelScope.launch(Dispatchers.IO) {
             dao.delete(note)
+            processIsDone.postValue(true)
         }
     }
     fun getNote(id: Int){
@@ -32,12 +34,14 @@ class DetailFragmentViewModel: ViewModel() {
     fun newNote(note : NoteClass){
         viewModelScope.launch(Dispatchers.IO) {
             dao.insert(note)
+            processIsDone.postValue(true)
         }
     }
 
     fun updateNote(note : NoteClass){
         viewModelScope.launch(Dispatchers.IO) {
             dao.update(note)
+            processIsDone.postValue(true)
         }
     }
 

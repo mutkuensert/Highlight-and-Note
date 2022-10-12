@@ -50,34 +50,52 @@ class DetailFragment : Fragment() {
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
 
             if(args.source == FROM_APP_AND_NEW_BUTTON){
+                val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
                 if(binding.editText.text.isNotEmpty()){
                     val newNote = NoteClass(binding.editText.text.toString())
                     viewModel.newNote(newNote)
-                    Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                    viewModel.processIsDone.observe(viewLifecycleOwner){
+                        if(it){
+                            Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                            findNavController().navigate(action)
+                        }
+                    }
+                } else{
+                    findNavController().navigate(action)
                 }
-                val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                findNavController().navigate(action)
 
             }else if(args.source == FROM_APP_AND_RECYCLERVIEW){
                 val noteFromRecyclerView = NoteClass(binding.editText.text.toString())
                 noteFromRecyclerView.uid = args.noteId
                 viewModel.updateNote(noteFromRecyclerView)
-                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
-                findNavController().navigate(action)
+                viewModel.processIsDone.observe(viewLifecycleOwner){
+                    if(it){
+                        Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                        val action = DetailFragmentDirections.actionDetailFragmentToMainFragment()
+                        findNavController().navigate(action)
+                    }
+                }
 
             }else if(args.source == FROM_INTENT_AND_SNACKBAR_NEW_BUTTON){
                 val newNote = NoteClass(binding.editText.text.toString())
                 viewModel.newNote(newNote)
-                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                activity?.finish()
+                viewModel.processIsDone.observe(viewLifecycleOwner){
+                    if(it){
+                        Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                        activity?.finish()
+                    }
+                }
 
             }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
                 val newNote = NoteClass(binding.editText.text.toString())
                 newNote.uid = args.noteId
                 viewModel.updateNote(newNote)
-                Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
-                activity?.finish()
+                viewModel.processIsDone.observe(viewLifecycleOwner){
+                    if(it){
+                        Toast.makeText(context,R.string.note_saved,Toast.LENGTH_SHORT).show()
+                        activity?.finish()
+                    }
+                }
             }
         }
         callback.isEnabled
