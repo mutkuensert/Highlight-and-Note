@@ -1,12 +1,16 @@
 package com.mutkuensert.highlightandnote.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -44,6 +48,11 @@ class DetailFragment : Fragment() {
         setMenu()
         setBackButtonCallback()
         getNoteOrReceivedTextToScreen()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.noteBackupForActivityDestruction = binding.editText.text.toString()
     }
 
     private fun setBackButtonCallback(){
@@ -105,17 +114,20 @@ class DetailFragment : Fragment() {
 
         if(args.source == FROM_INTENT_AND_SNACKBAR_NEW_BUTTON){
             binding.editText.setText(SingletonClass.receivedText)
+            viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
 
         }else if (args.source == FROM_APP_AND_RECYCLERVIEW){
             viewModel.getNote(args.noteId)
             viewModel.note.observe(viewLifecycleOwner) {
                 binding.editText.setText(it.note)
+                viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
             }
         }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
             viewModel.getNote(args.noteId)
             viewModel.note.observe(viewLifecycleOwner) {
                 val oldNoteAndNewText = it.note + "\n" + "\n${SingletonClass.receivedText}"
                 binding.editText.setText(oldNoteAndNewText)
+                viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
             }
             }
         }

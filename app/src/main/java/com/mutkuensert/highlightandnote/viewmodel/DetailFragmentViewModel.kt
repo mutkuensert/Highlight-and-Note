@@ -14,6 +14,7 @@ class DetailFragmentViewModel: ViewModel() {
     lateinit var dao: NoteDAO
     val note = MutableLiveData<NoteClass>()
     val processIsDone = MutableLiveData<Boolean>(false)
+    var noteBackupForActivityDestruction: String? = null
 
     fun createDataAccessObject(context: Context){
         dao = NoteDatabase(context).noteDao()
