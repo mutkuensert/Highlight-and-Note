@@ -11,11 +11,9 @@
                 android:id="@+id/editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/note_hint"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
-                android:textSize="16sp"
-                tools:layout_editor_absoluteY="15dp" />
+                android:textSize="16sp" />
     </ScrollView>
