@@ -53,6 +53,12 @@ class DetailFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.noteBackupForActivityDestruction = binding.editText.text.toString()
+        viewModel.cursorPositionBackupForActivityDestruction = binding.editText.selectionStart
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setBackButtonCallback(){
@@ -114,23 +120,28 @@ class DetailFragment : Fragment() {
 
         if(args.source == FROM_INTENT_AND_SNACKBAR_NEW_BUTTON){
             binding.editText.setText(SingletonClass.receivedText)
-            viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
+            getEditTextStatesIfActivityDestroyed()
 
         }else if (args.source == FROM_APP_AND_RECYCLERVIEW){
             viewModel.getNote(args.noteId)
             viewModel.note.observe(viewLifecycleOwner) {
                 binding.editText.setText(it.note)
-                viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
+                getEditTextStatesIfActivityDestroyed()
             }
         }else if(args.source == FROM_INTENT_AND_RECYCLERVIEW){
             viewModel.getNote(args.noteId)
             viewModel.note.observe(viewLifecycleOwner) {
                 val oldNoteAndNewText = it.note + "\n" + "\n${SingletonClass.receivedText}"
                 binding.editText.setText(oldNoteAndNewText)
-                viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
-            }
+                getEditTextStatesIfActivityDestroyed()
             }
         }
+    }
+
+    private fun getEditTextStatesIfActivityDestroyed(){
+        viewModel.noteBackupForActivityDestruction?.let { binding.editText.setText(it) }
+        viewModel.cursorPositionBackupForActivityDestruction?.let { binding.editText.setSelection(it) }
+    }
 
 
     private fun setMenu(){
@@ -153,13 +164,7 @@ class DetailFragment : Fragment() {
                 }
                 return true
             }
-
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }
