@@ -8,6 +8,7 @@
 ## Table of Contents
 * [About The Project](#about-the-project)
 * [How to Use](#how-to-use)
+* [Download on Google Play Store](#download-on-google-play-store)
 * [Tech](#tech)
 * [License](#license)
 * [Contact](#contact)
@@ -24,7 +25,9 @@ and the user can create a new note or add the selected text to a previously save
 <div align="center">
  <img src="docs/highlightandnoteintro.gif" width="250"/>
 </div>
- 
+
+## Download on Google Play Store
+[Highlight & Note](https://play.google.com/store/apps/details?id=com.mutkuensert.highlightandnote)
 
 ## Tech
 * [Coroutines](https://developer.android.com/kotlin/coroutines)
