@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.dagger.hilt.android)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.compose.compiler.plugin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -48,10 +49,13 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.compose)
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)
     implementation(libs.compose.preview)
+    implementation(libs.compose.navigation)
+    implementation((libs.compose.view.model))
 
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)
@@ -62,4 +66,6 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.navigation.ui)
+
+    implementation(libs.kotlin.serialization)
 }

@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HighlightAndNote">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             android:screenOrientation="user">
             <intent-filter>
