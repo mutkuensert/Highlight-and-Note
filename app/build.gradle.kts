@@ -55,7 +55,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.preview)
     implementation(libs.compose.navigation)
-    implementation((libs.compose.view.model))
+    implementation(libs.compose.view.model)
 
     implementation(libs.androidx.activity)
     testImplementation(libs.junit)
@@ -68,4 +68,6 @@ dependencies {
     implementation(libs.navigation.ui)
 
     implementation(libs.kotlin.serialization)
+
+    implementation(libs.room)
 }

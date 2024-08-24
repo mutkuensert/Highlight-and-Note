@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class NoteClass(
     @ColumnInfo(name = "note")
-    val note : String?) {
-
+    val note: String?
+) {
     @PrimaryKey(autoGenerate = true)
-    var uid : Int = 0
+    var uid: Int = 0
 }
