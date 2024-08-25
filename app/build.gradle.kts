@@ -63,6 +63,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.dagger.hilt)
+    debugImplementation(libs.androidx.ui.tooling)
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.navigation.ui)

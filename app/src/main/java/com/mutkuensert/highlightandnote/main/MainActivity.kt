@@ -44,7 +44,11 @@ class MainActivity : AppCompatActivity() {
                         startDestination = HomeRoute
                     ) {
                         composable<HomeRoute> {
-                            HomeScreen({}, getSelectedText())
+                            HomeScreen({},
+                                {
+                                    //navigate to new note, with selected text if exists
+                                }
+                            )
                         }
                     }
                 }
@@ -60,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         navController: NavController
     ) {
         LaunchedEffect(Unit) {
-            val selectedText = getSelectedText()
+            val selectedText = getSelectedTextInIntent()
 
             if (selectedText != null) {
                 val result = snackbarHostState
@@ -77,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getSelectedText(): String? {
+    private fun getSelectedTextInIntent(): String? {
         val action = intent.action
 
         if (action.equals(Intent.ACTION_PROCESS_TEXT) || action.equals(Intent.ACTION_SEND)) {
