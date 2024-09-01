@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.data
+package com.mutkuensert.highlightandnote.feature.note.data.database
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -21,6 +21,6 @@ interface NoteDAO {
     @Update
     suspend fun update(vararg note: NoteClass)
 
-    @Delete
-    suspend fun delete(uid: Int)
+    @Query("DELETE FROM noteclass WHERE uid=:id")
+    suspend fun delete(id: Int)
 }

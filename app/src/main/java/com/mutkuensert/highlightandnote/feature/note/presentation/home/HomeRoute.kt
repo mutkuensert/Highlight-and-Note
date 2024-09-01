@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.home
+package com.mutkuensert.highlightandnote.feature.note.presentation.home
 
 import kotlinx.serialization.Serializable
 

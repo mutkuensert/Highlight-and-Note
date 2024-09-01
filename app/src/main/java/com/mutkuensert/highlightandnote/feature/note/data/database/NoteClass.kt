@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.data
+package com.mutkuensert.highlightandnote.feature.note.data.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

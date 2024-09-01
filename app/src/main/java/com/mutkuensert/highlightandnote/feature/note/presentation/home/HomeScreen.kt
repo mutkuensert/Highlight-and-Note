@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.home
+package com.mutkuensert.highlightandnote.feature.note.presentation.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,15 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mutkuensert.highlightandnote.data.NoteClass
 
 @Composable
 fun HomeScreen(
     onNavigateToNote: (id: Int) -> Unit,
     onNavigateToNewNote: () -> Unit,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
@@ -46,7 +45,7 @@ fun HomeScreen(
 
 @Composable
 private fun Home(
-    notes: List<NoteClass>,
+    notes: List<NoteUiModel>,
     onClickNote: (id: Int) -> Unit,
     onClickNewNote: () -> Unit
 ) {
@@ -64,7 +63,7 @@ private fun Home(
 
 @Composable
 private fun Notes(
-    notes: List<NoteClass>,
+    notes: List<NoteUiModel>,
     onClickNote: (id: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -75,12 +74,10 @@ private fun Notes(
         items(notes.size) {
             val note = notes[it]
 
-            if (note.note != null) {
-                Note(
-                    onClick = { onClickNote.invoke(note.uid) },
-                    text = note.note
-                )
-            }
+            Note(
+                onClick = { onClickNote.invoke(note.id) },
+                text = note.text
+            )
 
             if (it != notes.lastIndex) {
                 Spacer(Modifier.height(8.dp))
@@ -111,12 +108,11 @@ private fun Note(onClick: () -> Unit, text: String, modifier: Modifier = Modifie
         modifier = modifier
             .fillMaxWidth()
             .shadow(5.dp, MaterialTheme.shapes.medium)
+            .clickable(onClick = onClick)
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
-            modifier = Modifier
-                .padding(8.dp)
-                .clickable(onClick = onClick),
+            modifier = Modifier.padding(8.dp),
             text = text
         )
     }
@@ -126,11 +122,12 @@ private fun Note(onClick: () -> Unit, text: String, modifier: Modifier = Modifie
 @Composable
 private fun HomePreview() {
     val fakeNotes = listOf(
-        NoteClass(
+        NoteUiModel(
+            0,
             "First note first note first note First note first note first note " +
                     "First note first note first note First note first note first note"
         ),
-        NoteClass("First note")
+        NoteUiModel(1, "First note")
     )
 
     Home(fakeNotes, {}, {})

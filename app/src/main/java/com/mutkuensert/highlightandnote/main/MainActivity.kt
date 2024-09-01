@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -16,14 +17,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mutkuensert.androidsignatureexample.ui.theme.HighlightAndNoteTheme
 import com.mutkuensert.highlightandnote.R
-import com.mutkuensert.highlightandnote.home.HomeRoute
-import com.mutkuensert.highlightandnote.home.HomeScreen
+import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
+import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
+import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeRoute
+import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,29 +37,54 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             HighlightAndNoteTheme {
-                val navController = rememberNavController()
-                val snackbarHostState = remember { SnackbarHostState() }
+                AppContent()
+            }
+        }
+    }
 
-                Scaffold(
-                    snackbarHost = {
-                        SnackbarHost(hostState = snackbarHostState)
-                    }) {
-                    NavHost(
-                        modifier = Modifier.padding(it),
-                        navController = navController,
-                        startDestination = HomeRoute
-                    ) {
-                        composable<HomeRoute> {
-                            HomeScreen({},
-                                {
-                                    //navigate to new note, with selected text if exists
-                                }
-                            )
-                        }
+    @Composable
+    private fun AppContent() {
+        val navController = rememberNavController()
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            }
+        ) { paddingValues ->
+            AppNavHost(
+                navController = navController,
+                paddingValues = paddingValues
+            )
+        }
+
+        SelectedTextHandler(snackbarHostState, navController)
+    }
+
+    @Composable
+    private fun AppNavHost(
+        navController: NavHostController,
+        paddingValues: PaddingValues,
+        modifier: Modifier = Modifier
+    ) {
+        NavHost(
+            modifier = modifier.padding(paddingValues),
+            navController = navController,
+            startDestination = HomeRoute()
+        ) {
+            composable<HomeRoute> {
+                HomeScreen(
+                    onNavigateToNote = { noteId: Int ->
+                        navController.navigate(DetailRoute(noteId))
+                    },
+                    onNavigateToNewNote = {
+                        navController.navigate(DetailRoute())
                     }
-                }
+                )
+            }
 
-                SelectedTextHandler(snackbarHostState, navController)
+            composable<DetailRoute> {
+                DetailScreen(onClickBack = navController::popBackStack)
             }
         }
     }
@@ -75,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                 if (result == SnackbarResult.ActionPerformed) {
-                    navController.navigate(HomeRoute(selectedText)) //To be detail route
+                    navController.navigate(DetailRoute(text = selectedText))
                 }
             }
         }

@@ -1,9 +1,8 @@
-package com.mutkuensert.highlightandnote.home
+package com.mutkuensert.highlightandnote.feature.note.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mutkuensert.highlightandnote.data.NoteClass
-import com.mutkuensert.highlightandnote.data.NoteDAO
+import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -17,22 +16,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val dao: NoteDAO) : ViewModel() {
-    private val _notes = MutableStateFlow<List<NoteClass>>(emptyList())
-    val notes: StateFlow<List<NoteClass>> = _notes.asStateFlow().shortenLongNotes()
+class HomeViewModel @Inject constructor(
+    private val repository: NoteRepository
+) : ViewModel() {
+    private val _notes = MutableStateFlow<List<NoteUiModel>>(emptyList())
+    val notes = _notes.asStateFlow().shortenLongNotes()
 
     fun getNotes() {
         viewModelScope.launch(Dispatchers.IO) {
-            _notes.update { dao.getAll() }
+            _notes.update { repository.getNotes().map { NoteUiModel(it.id, it.text) } }
         }
     }
 
-    private fun StateFlow<List<NoteClass>>.shortenLongNotes(): StateFlow<List<NoteClass>> {
+    private fun StateFlow<List<NoteUiModel>>.shortenLongNotes(): StateFlow<List<NoteUiModel>> {
         return map { notes ->
             notes.map { note ->
-                if (note.note != null && note.note.length > 300) {
-                    val notePreview = note.note.substring(0..300) + "..."
-                    note.copy(note = notePreview)
+                if (note.text.length > 300) {
+                    val notePreview = note.text.substring(0..300) + "..."
+                    note.copy(text = notePreview)
                 } else {
                     note
                 }

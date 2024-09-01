@@ -53,7 +53,9 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons)
     implementation(libs.compose.preview)
+    implementation(libs.compose.hilt.navigation)
     implementation(libs.compose.navigation)
     implementation(libs.compose.view.model)
 
@@ -71,4 +73,6 @@ dependencies {
     implementation(libs.kotlin.serialization)
 
     implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }
