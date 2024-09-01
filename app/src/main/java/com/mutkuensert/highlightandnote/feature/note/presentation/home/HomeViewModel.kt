@@ -22,7 +22,11 @@ class HomeViewModel @Inject constructor(
     private val _notes = MutableStateFlow<List<NoteUiModel>>(emptyList())
     val notes = _notes.asStateFlow().shortenLongNotes()
 
-    fun getNotes() {
+    fun initScreen() {
+        getNotes()
+    }
+
+    private fun getNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             _notes.update { repository.getNotes().map { NoteUiModel(it.id, it.text) } }
         }

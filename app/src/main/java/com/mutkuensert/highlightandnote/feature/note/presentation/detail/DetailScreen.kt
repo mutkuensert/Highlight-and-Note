@@ -15,13 +15,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mutkuensert.highlightandnote.feature.note.core.RepeatOnLifecycleEffect
 import com.mutkuensert.highlightandnote.feature.note.core.asActivity
 
 @Composable
@@ -38,7 +38,7 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onNavigateBack: (
         onTextChange = viewModel::handleTextChange
     )
 
-    LaunchedEffect(Unit) {
+    RepeatOnLifecycleEffect {
         viewModel.initScreen()
     }
 
