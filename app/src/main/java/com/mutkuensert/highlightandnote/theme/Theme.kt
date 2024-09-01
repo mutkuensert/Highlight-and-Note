@@ -25,6 +25,7 @@ class AppColorScheme(
     val shadow: Color
 )
 
+@Suppress("UnusedReceiverParameter")
 val MaterialTheme.appColors: AppColorScheme
     @Composable
     get() = AppColorScheme(shadow = getThemeColor(Color.Black, Color.White))
