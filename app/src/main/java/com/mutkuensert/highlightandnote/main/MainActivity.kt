@@ -21,12 +21,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mutkuensert.androidsignatureexample.ui.theme.HighlightAndNoteTheme
 import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
 import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeScreen
+import com.mutkuensert.highlightandnote.theme.HighlightAndNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,7 +75,12 @@ class MainActivity : AppCompatActivity() {
             composable<HomeRoute> {
                 HomeScreen(
                     onNavigateToNote = { noteId: Int ->
-                        navController.navigate(DetailRoute(noteId))
+                        navController.navigate(
+                            DetailRoute(
+                                id = noteId,
+                                text = getSelectedTextInIntent()
+                            )
+                        )
                     },
                     onNavigateToNewNote = {
                         navController.navigate(DetailRoute())
@@ -84,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             composable<DetailRoute> {
-                DetailScreen(onClickBack = navController::popBackStack)
+                DetailScreen(onNavigateBack = navController::popBackStack)
             }
         }
     }
@@ -102,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     .showSnackbar(
                         message = getString(R.string.snack_message),
                         actionLabel = getString(R.string.menu_new),
-                        duration = SnackbarDuration.Indefinite
+                        duration = SnackbarDuration.Long
                     )
 
                 if (result == SnackbarResult.ActionPerformed) {

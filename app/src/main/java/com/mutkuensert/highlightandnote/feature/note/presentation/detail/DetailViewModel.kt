@@ -37,14 +37,19 @@ class DetailViewModel @Inject constructor(
     fun initScreen() {
         if (id != null) {
             getNote()
-            _uiModel.update { it.copy(shouldShowDeleteButton = true) }
         }
     }
 
     private fun getNote() {
         launchInIo {
             repository.getNote(id!!).onSuccess { text ->
-                _uiModel.update { it.copy(text = text) }
+                var textWithAdditionalText = text
+
+                if (route.text != null) {
+                    textWithAdditionalText = "$text\n\n${route.text}"
+                }
+
+                _uiModel.update { it.copy(text = textWithAdditionalText) }
             }
         }
     }
@@ -77,7 +82,11 @@ class DetailViewModel @Inject constructor(
         _uiModel.update { it.copy(text = text) }
     }
 
-    fun handleBackClick() {
+    fun handleBackClick(onFinishApp: () -> Unit) {
+        if (route.text != null) {
+            onFinishApp.invoke()
+        }
+
         launchInIo {
             if (id != null) {
                 updateNote()

@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mutkuensert.highlightandnote.theme.appColors
 
 @Composable
 fun HomeScreen(
@@ -107,13 +108,19 @@ private fun Note(onClick: () -> Unit, text: String, modifier: Modifier = Modifie
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(5.dp, MaterialTheme.shapes.medium)
+            .shadow(
+                5.dp,
+                MaterialTheme.shapes.medium,
+                ambientColor = MaterialTheme.appColors.shadow,
+                spotColor = MaterialTheme.appColors.shadow
+            )
             .clickable(onClick = onClick)
             .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
-            text = text
+            text = text,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

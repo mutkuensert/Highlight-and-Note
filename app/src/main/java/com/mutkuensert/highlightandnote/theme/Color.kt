@@ -1,4 +1,4 @@
-package com.mutkuensert.androidsignatureexample.ui.theme
+package com.mutkuensert.highlightandnote.theme
 
 import androidx.compose.ui.graphics.Color
 

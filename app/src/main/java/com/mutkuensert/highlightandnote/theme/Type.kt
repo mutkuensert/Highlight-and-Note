@@ -1,4 +1,4 @@
-package com.mutkuensert.androidsignatureexample.ui.theme
+package com.mutkuensert.highlightandnote.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

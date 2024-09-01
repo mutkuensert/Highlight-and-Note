@@ -18,12 +18,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mutkuensert.highlightandnote.feature.note.core.asActivity
 
 @Composable
-fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onClickBack: () -> Unit) {
+fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onNavigateBack: () -> Unit) {
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
 
     Detail(
@@ -31,7 +33,7 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onClickBack: () -
         onClickUndo = viewModel::handleUndoClick,
         onClickDelete = {
             viewModel.handleDeleteClick()
-            onClickBack.invoke()
+            onNavigateBack.invoke()
         },
         onTextChange = viewModel::handleTextChange
     )
@@ -40,9 +42,11 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onClickBack: () -
         viewModel.initScreen()
     }
 
+    val activity = LocalContext.current.asActivity()
+
     BackHandler {
-        viewModel.handleBackClick()
-        onClickBack.invoke()
+        viewModel.handleBackClick(onFinishApp = { activity?.finish() })
+        onNavigateBack.invoke()
     }
 }
 
@@ -59,7 +63,6 @@ private fun Detail(
             .background(MaterialTheme.colorScheme.background)
     ) {
         Header(
-            shouldShowDeleteButton = uiModel.shouldShowDeleteButton,
             onClickUndo = onClickUndo,
             onClickDelete = onClickDelete
         )
@@ -74,7 +77,6 @@ private fun Detail(
 
 @Composable
 private fun Header(
-    shouldShowDeleteButton: Boolean,
     onClickUndo: () -> Unit,
     onClickDelete: () -> Unit,
     modifier: Modifier = Modifier
@@ -84,9 +86,7 @@ private fun Header(
 
         UndoButton(onClickUndo)
 
-        if (shouldShowDeleteButton) {
-            DeleteButton(onClickDelete)
-        }
+        DeleteButton(onClickDelete)
     }
 }
 
@@ -107,7 +107,7 @@ private fun DeleteButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun DetailScreenPreview() {
-    val uiModel = DetailUiModel("Some note", true)
+    val uiModel = DetailUiModel("Some note")
 
     Detail(
         uiModel = uiModel,
