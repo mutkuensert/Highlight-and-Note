@@ -6,8 +6,8 @@ data class DetailUiModel(
 
     companion object {
 
-        fun initial(text: String = ""): DetailUiModel {
-            return DetailUiModel(text = text)
+        fun initial(): DetailUiModel {
+            return DetailUiModel(text = "")
         }
     }
 }

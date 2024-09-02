@@ -45,8 +45,10 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onNavigateBack: (
     val activity = LocalContext.current.asActivity()
 
     BackHandler {
-        viewModel.handleBackClick(onFinishApp = { activity?.finish() })
-        onNavigateBack.invoke()
+        viewModel.handleBackClick(
+            onFinishApp = { activity?.finish() },
+            onNavigateBack = onNavigateBack
+        )
     }
 }
 

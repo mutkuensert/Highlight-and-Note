@@ -25,7 +25,7 @@ class DetailViewModel @Inject constructor(
     private val route = savedStateHandle.toRoute<DetailRoute>()
     private val id: Int? get() = route.id
 
-    private val _uiModel = MutableStateFlow(DetailUiModel.initial(route.text ?: ""))
+    private val _uiModel = MutableStateFlow(DetailUiModel.initial())
     val uiModel = _uiModel.asStateFlow()
 
     private val history: MutableList<String> = mutableListOf()
@@ -35,21 +35,23 @@ class DetailViewModel @Inject constructor(
     }
 
     fun initScreen() {
-        if (id != null) {
-            getNote()
-        }
+        getNote()
     }
 
     private fun getNote() {
         launchInIo {
-            repository.getNote(id!!).onSuccess { text ->
-                var textWithAdditionalText = text
+            if (id != null) {
+                repository.getNote(id!!).onSuccess { text ->
+                    var textWithAdditionalText = text
 
-                if (route.text != null) {
-                    textWithAdditionalText = "$text\n\n${route.text}"
+                    if (route.text != null) {
+                        textWithAdditionalText = "$text\n\n${route.text}"
+                    }
+
+                    _uiModel.update { it.copy(text = textWithAdditionalText) }
                 }
-
-                _uiModel.update { it.copy(text = textWithAdditionalText) }
+            } else {
+                _uiModel.update { it.copy(text = route.text ?: "") }
             }
         }
     }
@@ -82,16 +84,21 @@ class DetailViewModel @Inject constructor(
         _uiModel.update { it.copy(text = text) }
     }
 
-    fun handleBackClick(onFinishApp: () -> Unit) {
-        if (route.text != null) {
-            onFinishApp.invoke()
-        }
-
+    fun handleBackClick(
+        onFinishApp: () -> Unit,
+        onNavigateBack: () -> Unit
+    ) {
         launchInIo {
             if (id != null) {
                 updateNote()
             } else {
                 saveNewNote()
+            }
+
+            if (route.text != null) {
+                onFinishApp.invoke()
+            } else {
+                onNavigateBack.invoke()
             }
         }
     }
