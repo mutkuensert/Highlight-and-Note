@@ -25,16 +25,13 @@ import com.mutkuensert.highlightandnote.feature.note.core.RepeatOnLifecycleEffec
 import com.mutkuensert.highlightandnote.feature.note.core.asActivity
 
 @Composable
-fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onNavigateBack: () -> Unit) {
+fun DetailScreen(viewModel: DetailViewModel = hiltViewModel()) {
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
 
     Detail(
         uiModel = uiModel,
         onClickUndo = viewModel::handleUndoClick,
-        onClickDelete = {
-            viewModel.handleDeleteClick()
-            onNavigateBack.invoke()
-        },
+        onClickDelete = viewModel::handleDeleteClick,
         onTextChange = viewModel::handleTextChange
     )
 
@@ -45,10 +42,7 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel(), onNavigateBack: (
     val activity = LocalContext.current.asActivity()
 
     BackHandler {
-        viewModel.handleBackClick(
-            onFinishApp = { activity?.finish() },
-            onNavigateBack = onNavigateBack
-        )
+        viewModel.handleBackClick(onFinishApp = { activity?.finish() })
     }
 }
 

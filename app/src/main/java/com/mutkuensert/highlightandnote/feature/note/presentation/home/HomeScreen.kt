@@ -31,13 +31,16 @@ import com.mutkuensert.highlightandnote.theme.appColors
 
 @Composable
 fun HomeScreen(
-    onNavigateToNote: (id: Int) -> Unit,
-    onNavigateToNewNote: () -> Unit,
+    selectedTextInIntent: String?,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
-    Home(notes, onNavigateToNote, onNavigateToNewNote)
+    Home(
+        notes = notes,
+        onClickNote = { noteId -> viewModel.handleOnClickNote(noteId, selectedTextInIntent) },
+        onClickNewNote = viewModel::handleOnClickNewNote
+    )
 
     RepeatOnLifecycleEffect(Unit) {
         viewModel.initScreen()

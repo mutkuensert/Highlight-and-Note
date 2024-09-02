@@ -2,7 +2,9 @@ package com.mutkuensert.highlightandnote.feature.note.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
+import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: NoteRepository
+    private val repository: NoteRepository,
+    private val appNavigator: AppNavigator,
 ) : ViewModel() {
     private val _notes = MutableStateFlow<List<NoteUiModel>>(emptyList())
     val notes = _notes.asStateFlow().shortenLongNotes()
@@ -30,6 +33,19 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _notes.update { repository.getNotes().map { NoteUiModel(it.id, it.text) } }
         }
+    }
+
+    fun handleOnClickNote(id: Int, selectedTextInIntent: String?) {
+        appNavigator.controller.navigate(
+            DetailRoute(
+                id = id,
+                text = selectedTextInIntent
+            )
+        )
+    }
+
+    fun handleOnClickNewNote() {
+        appNavigator.controller.navigate(DetailRoute())
     }
 
     private fun StateFlow<List<NoteUiModel>>.shortenLongNotes(): StateFlow<List<NoteUiModel>> {

@@ -22,15 +22,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mutkuensert.highlightandnote.R
+import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
 import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeScreen
 import com.mutkuensert.highlightandnote.theme.HighlightAndNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var appNavigator: AppNavigator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,6 +50,11 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun AppContent() {
         val navController = rememberNavController()
+
+        LaunchedEffect(navController) {
+            appNavigator.setNavHostController(navController)
+        }
+
         val snackbarHostState = remember { SnackbarHostState() }
 
         Scaffold(
@@ -73,23 +83,11 @@ class MainActivity : AppCompatActivity() {
             startDestination = HomeRoute()
         ) {
             composable<HomeRoute> {
-                HomeScreen(
-                    onNavigateToNote = { noteId: Int ->
-                        navController.navigate(
-                            DetailRoute(
-                                id = noteId,
-                                text = getSelectedTextInIntent()
-                            )
-                        )
-                    },
-                    onNavigateToNewNote = {
-                        navController.navigate(DetailRoute())
-                    }
-                )
+                HomeScreen(getSelectedTextInIntent())
             }
 
             composable<DetailRoute> {
-                DetailScreen(onNavigateBack = navController::popBackStack)
+                DetailScreen()
             }
         }
     }
