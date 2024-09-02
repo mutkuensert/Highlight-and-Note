@@ -17,12 +17,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mutkuensert.highlightandnote.feature.note.core.RepeatOnLifecycleEffect
-import com.mutkuensert.highlightandnote.feature.note.core.asActivity
 
 @Composable
 fun DetailScreen(viewModel: DetailViewModel = hiltViewModel()) {
@@ -39,10 +37,8 @@ fun DetailScreen(viewModel: DetailViewModel = hiltViewModel()) {
         viewModel.initScreen()
     }
 
-    val activity = LocalContext.current.asActivity()
-
     BackHandler {
-        viewModel.handleBackClick(onFinishApp = { activity?.finish() })
+        viewModel.handleBackClick()
     }
 }
 

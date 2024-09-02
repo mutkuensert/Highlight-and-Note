@@ -87,7 +87,7 @@ class DetailViewModel @Inject constructor(
         _uiModel.update { it.copy(text = text) }
     }
 
-    fun handleBackClick(onFinishApp: () -> Unit) {
+    fun handleBackClick() {
         launchInIo {
             if (id != null) {
                 updateNote()
@@ -96,7 +96,7 @@ class DetailViewModel @Inject constructor(
             }
 
             if (route.text != null) {
-                onFinishApp.invoke()
+                appNavigator.finish()
             } else {
                 appNavigator.controller.popBackStack()
             }
