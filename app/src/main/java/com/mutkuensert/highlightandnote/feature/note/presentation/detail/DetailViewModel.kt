@@ -12,8 +12,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -70,9 +70,11 @@ class DetailViewModel @Inject constructor(
 
     private fun listenAndKeepChangesInHistory() {
         launchInIo {
-            uiModel.debounce(500).collectLatest {
-                history.add(it.text)
-            }
+            uiModel.drop(1) //Drop initial ui model
+                .debounce(500)
+                .collect {
+                    history.add(it.text)
+                }
         }
     }
 
