@@ -1,7 +1,5 @@
 package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
-import android.content.Context
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,35 +20,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mutkuensert.highlightandnote.R
-import com.mutkuensert.highlightandnote.feature.note.core.RepeatOnLifecycleEffect
+import com.mutkuensert.highlightandnote.feature.note.core.compose.RepeatOnLifecycleEffect
+import com.mutkuensert.highlightandnote.feature.note.core.compose.Swipeable
 import com.mutkuensert.highlightandnote.theme.appColors
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun NotesScreen(
@@ -117,93 +103,19 @@ private fun Notes(
     ) {
         items(notes.size, { notes[it].id }) {
             val note = notes[it]
-            SwipeableNote(
-                note,
-                onClick = { onClickNote.invoke(note.id) },
-                onSnackbarDismissed,
+
+            Swipeable(
                 snackbarHostState,
-                modifier.padding(bottom = 8.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun SwipeableNote(
-    note: NoteUiModel,
-    onClick: () -> Unit,
-    onSnackbarDismissed: (noteId: Int) -> Unit,
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    val isNoteVisible = remember { mutableStateOf(true) }
-    val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
-        handleValueChange(
-            context,
-            dismissValue,
-            isNoteVisible,
-            coroutineScope,
-            snackbarHostState,
-            onSnackbarDismissed = {
-                onSnackbarDismissed.invoke(note.id)
+                { onSnackbarDismissed.invoke(note.id) },
+                backgroundContent = { SwipedBackground() }
+            ) {
+                Note(
+                    onClick = { onClickNote.invoke(note.id) },
+                    text = note.text
+                )
             }
-        )
-    })
-
-    LaunchedEffect(isNoteVisible.value) {
-        if (isNoteVisible.value) {
-            dismissState.reset()
         }
     }
-
-    AnimatedVisibility(isNoteVisible.value) {
-        SwipeToDismissBox(
-            dismissState,
-            backgroundContent = { SwipedBackground() },
-            modifier,
-            enableDismissFromStartToEnd = true,
-            enableDismissFromEndToStart = true,
-            content = {
-                Note(onClick = onClick, text = note.text)
-            }
-        )
-    }
-}
-
-private fun handleValueChange(
-    context: Context,
-    dismissValue: SwipeToDismissBoxValue,
-    isNoteVisible: MutableState<Boolean>,
-    coroutineScope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    onSnackbarDismissed: () -> Unit,
-): Boolean {
-    if (dismissValue == SwipeToDismissBoxValue.Settled) {
-        return true
-    }
-
-    if (!isNoteVisible.value) {
-        return false
-    }
-
-    coroutineScope.launch {
-        val snackbarResult = snackbarHostState.showSnackbar(
-            message = context.getString(R.string.do_you_want_to_undo_deletion),
-            actionLabel = context.getString(R.string.undo),
-            duration = SnackbarDuration.Short
-        )
-
-        if (snackbarResult == SnackbarResult.Dismissed) {
-            onSnackbarDismissed.invoke()
-        } else {
-            isNoteVisible.value = true
-
-        }
-    }
-    isNoteVisible.value = false
-    return true
 }
 
 @Composable
