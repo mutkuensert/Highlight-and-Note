@@ -78,7 +78,7 @@ private fun Notes(
         ) {
             Header(onClickNewNote)
 
-            Notes(
+            NotesColumn(
                 notes,
                 onClickNote,
                 onSnackbarDismissed = { noteId: Int -> onDeleteNote.invoke(noteId) },
@@ -89,7 +89,7 @@ private fun Notes(
 }
 
 @Composable
-private fun Notes(
+private fun NotesColumn(
     notes: List<NoteUiModel>,
     onClickNote: (id: Int) -> Unit,
     onSnackbarDismissed: (noteId: Int) -> Unit,
@@ -106,6 +106,7 @@ private fun Notes(
             Swipeable(
                 snackbarHostState,
                 { onSnackbarDismissed.invoke(note.id) },
+                Modifier.padding(bottom = 8.dp),
                 backgroundContent = { SwipedBackground() }
             ) {
                 Note(
