@@ -1,5 +1,6 @@
 package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,10 +41,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.feature.note.core.RepeatOnLifecycleEffect
 import com.mutkuensert.highlightandnote.theme.appColors
 import kotlinx.coroutines.CoroutineScope
@@ -133,10 +136,12 @@ private fun SwipeableNote(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val isNoteVisible = remember { mutableStateOf(true) }
     val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
         handleValueChange(
+            context,
             dismissValue,
             isNoteVisible,
             coroutineScope,
@@ -168,6 +173,7 @@ private fun SwipeableNote(
 }
 
 private fun handleValueChange(
+    context: Context,
     dismissValue: SwipeToDismissBoxValue,
     isNoteVisible: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
@@ -184,8 +190,8 @@ private fun handleValueChange(
 
     coroutineScope.launch {
         val snackbarResult = snackbarHostState.showSnackbar(
-            message = "Silme işlemini geri al?",
-            actionLabel = "Geri al",
+            message = context.getString(R.string.do_you_want_to_undo_deletion),
+            actionLabel = context.getString(R.string.undo),
             duration = SnackbarDuration.Short
         )
 
