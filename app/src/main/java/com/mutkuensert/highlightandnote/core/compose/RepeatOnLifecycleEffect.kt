@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.feature.note.core.compose
+package com.mutkuensert.highlightandnote.core.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

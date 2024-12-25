@@ -2,7 +2,7 @@ package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel

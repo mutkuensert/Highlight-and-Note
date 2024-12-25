@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -64,8 +64,8 @@ class DetailViewModel @Inject constructor(
         }
 
         _uiModel.update { it.copy(text = history[history.lastIndex - 1]) }
-        history.removeLast()
-        history.removeLast() // 2 times because uiModel is being listened and changes added in history after updating uiModel
+        history.removeAt(history.lastIndex)
+        history.removeAt(history.lastIndex) // 2 times because uiModel is being listened and changes added in history after updating uiModel
     }
 
     private fun listenAndKeepChangesInHistory() {

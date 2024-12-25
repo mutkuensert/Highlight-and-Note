@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mutkuensert.highlightandnote.R
-import com.mutkuensert.highlightandnote.feature.note.core.compose.RepeatOnLifecycleEffect
-import com.mutkuensert.highlightandnote.feature.note.core.compose.SnackbarConfig
-import com.mutkuensert.highlightandnote.feature.note.core.compose.Swipeable
+import com.mutkuensert.highlightandnote.core.compose.RepeatOnLifecycleEffect
+import com.mutkuensert.highlightandnote.core.compose.SnackbarConfig
+import com.mutkuensert.highlightandnote.core.compose.Swipeable
 import com.mutkuensert.highlightandnote.theme.appColors
 
 @Composable

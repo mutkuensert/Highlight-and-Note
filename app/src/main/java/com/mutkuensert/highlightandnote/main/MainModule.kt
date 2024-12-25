@@ -1,6 +1,6 @@
 package com.mutkuensert.highlightandnote.main
 
-import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.AppNavigator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

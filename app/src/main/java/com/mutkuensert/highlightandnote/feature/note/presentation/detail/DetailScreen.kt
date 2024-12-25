@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mutkuensert.highlightandnote.feature.note.core.compose.RepeatOnLifecycleEffect
+import com.mutkuensert.highlightandnote.core.compose.RepeatOnLifecycleEffect
 
 @Composable
 fun DetailScreen(viewModel: DetailViewModel = hiltViewModel()) {

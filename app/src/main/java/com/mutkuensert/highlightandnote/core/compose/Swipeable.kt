@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.feature.note.core.compose
+package com.mutkuensert.highlightandnote.core.compose
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.RowScope

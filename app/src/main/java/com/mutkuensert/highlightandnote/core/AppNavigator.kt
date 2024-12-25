@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.feature.note.core
+package com.mutkuensert.highlightandnote.core
 
 import androidx.navigation.NavHostController
 import com.mutkuensert.highlightandnote.main.MainActivity

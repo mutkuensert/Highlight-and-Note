@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mutkuensert.highlightandnote.R
-import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
 import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesRoute
