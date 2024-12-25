@@ -29,11 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.feature.note.core.compose.RepeatOnLifecycleEffect
+import com.mutkuensert.highlightandnote.feature.note.core.compose.SnackbarConfig
 import com.mutkuensert.highlightandnote.feature.note.core.compose.Swipeable
 import com.mutkuensert.highlightandnote.theme.appColors
 
@@ -102,10 +105,16 @@ private fun NotesColumn(
     ) {
         items(notes.size, { notes[it].id }) {
             val note = notes[it]
-
-            Swipeable(
+            val context = LocalContext.current
+            val snackbarConfig = SnackbarConfig(
                 snackbarHostState,
                 { onSnackbarDismissed.invoke(note.id) },
+                context.getString(R.string.do_you_want_to_undo_deletion),
+                context.getString(R.string.undo)
+            )
+
+            Swipeable(
+                snackbarConfig,
                 Modifier.padding(bottom = 8.dp),
                 backgroundContent = { SwipedBackground() }
             ) {

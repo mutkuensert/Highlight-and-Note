@@ -1,6 +1,5 @@
 package com.mutkuensert.highlightandnote.feature.note.core.compose
 
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.SnackbarDuration
@@ -16,64 +15,48 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.mutkuensert.highlightandnote.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun Swipeable(
-    snackbarHostState: SnackbarHostState,
-    onSnackbarDismissed: () -> Unit,
+    snackbarConfig: SnackbarConfig,
     modifier: Modifier = Modifier,
-    enableDismissFromStartToEnd: Boolean = true,
-    enableDismissFromEndToStart: Boolean = true,
-    gesturesEnabled: Boolean = true,
+    swipeableConfig: SwipeableConfig = SwipeableConfig(),
     backgroundContent: @Composable() (RowScope.() -> Unit),
     content: @Composable RowScope.() -> Unit,
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val isNoteVisible = remember { mutableStateOf(true) }
+    val isVisible = remember { mutableStateOf(true) }
     val dismissState = rememberSwipeToDismissBoxState(confirmValueChange = { dismissValue ->
-        handleValueChange(
-            context,
-            dismissValue,
-            isNoteVisible,
-            coroutineScope,
-            snackbarHostState,
-            onSnackbarDismissed
-        )
+        dismissValue.handleSwipeAction(isVisible, coroutineScope, snackbarConfig)
     })
 
-    LaunchedEffect(isNoteVisible.value) {
-        if (isNoteVisible.value) {
+    LaunchedEffect(isVisible.value) {
+        if (isVisible.value) {
             dismissState.reset()
         }
     }
 
-    AnimatedVisibility(isNoteVisible.value) {
+    AnimatedVisibility(isVisible.value) {
         SwipeToDismissBox(
             dismissState,
             backgroundContent,
             modifier,
-            enableDismissFromStartToEnd,
-            enableDismissFromEndToStart,
-            gesturesEnabled,
+            swipeableConfig.enableDismissFromStartToEnd,
+            swipeableConfig.enableDismissFromEndToStart,
+            swipeableConfig.gesturesEnabled,
             content
         )
     }
 }
 
-private fun handleValueChange(
-    context: Context,
-    dismissValue: SwipeToDismissBoxValue,
+private fun SwipeToDismissBoxValue.handleSwipeAction(
     isVisible: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    onSnackbarDismissed: () -> Unit,
+    snackbarConfig: SnackbarConfig,
 ): Boolean {
-    if (dismissValue == SwipeToDismissBoxValue.Settled) {
+    if (this == SwipeToDismissBoxValue.Settled) {
         return true
     }
 
@@ -82,14 +65,14 @@ private fun handleValueChange(
     }
 
     coroutineScope.launch {
-        val snackbarResult = snackbarHostState.showSnackbar(
-            message = context.getString(R.string.do_you_want_to_undo_deletion),
-            actionLabel = context.getString(R.string.undo),
-            duration = SnackbarDuration.Short
+        val snackbarResult = snackbarConfig.snackbarHostState.showSnackbar(
+            message = snackbarConfig.snackbarMessage,
+            actionLabel = snackbarConfig.actionLabel,
+            duration = snackbarConfig.duration
         )
 
         if (snackbarResult == SnackbarResult.Dismissed) {
-            onSnackbarDismissed.invoke()
+            snackbarConfig.onSnackbarDismissed.invoke()
         } else {
             isVisible.value = true
 
@@ -98,3 +81,17 @@ private fun handleValueChange(
     isVisible.value = false
     return true
 }
+
+class SnackbarConfig(
+    val snackbarHostState: SnackbarHostState,
+    val onSnackbarDismissed: () -> Unit,
+    val snackbarMessage: String,
+    val actionLabel: String,
+    val duration: SnackbarDuration = SnackbarDuration.Short
+)
+
+class SwipeableConfig(
+    val enableDismissFromStartToEnd: Boolean = true,
+    val enableDismissFromEndToStart: Boolean = true,
+    val gesturesEnabled: Boolean = true,
+)
