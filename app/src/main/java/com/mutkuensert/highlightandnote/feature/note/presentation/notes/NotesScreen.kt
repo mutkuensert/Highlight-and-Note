@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -138,19 +137,19 @@ private fun NewButton(onClickNewNote: () -> Unit, modifier: Modifier = Modifier)
 private fun SwipedBackground() {
     Row(
         modifier = Modifier
-            .background(color = Color.Red, shape = RoundedCornerShape(8.dp))
+            .background(Color.Red, MaterialTheme.shapes.medium)
             .fillMaxSize()
             .padding(5.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        DeleteIcon()
-        DeleteIcon()
+        IconDelete()
+        IconDelete()
     }
 }
 
 @Composable
-private fun DeleteIcon() {
+private fun IconDelete() {
     Icon(
         imageVector = Icons.Default.Delete,
         contentDescription = null,
