@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -126,7 +125,6 @@ private fun Notes(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SwipeableNote(
     note: NoteUiModel,
@@ -169,7 +167,6 @@ private fun SwipeableNote(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 private fun handleValueChange(
     dismissValue: SwipeToDismissBoxValue,
     isNoteVisible: MutableState<Boolean>,
