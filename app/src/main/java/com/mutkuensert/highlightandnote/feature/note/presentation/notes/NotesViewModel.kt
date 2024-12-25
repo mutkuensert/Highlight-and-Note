@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.feature.note.presentation.home
+package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class NotesViewModel @Inject constructor(
     private val repository: NoteRepository,
     private val appNavigator: AppNavigator,
 ) : ViewModel() {

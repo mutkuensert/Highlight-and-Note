@@ -1,4 +1,4 @@
-package com.mutkuensert.highlightandnote.feature.note.presentation.home
+package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -50,13 +50,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(
+fun NotesScreen(
     selectedTextInIntent: String?,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: NotesViewModel = hiltViewModel()
 ) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
-    Home(
+    Notes(
         notes = notes,
         onClickNote = { noteId -> viewModel.handleOnClickNote(noteId, selectedTextInIntent) },
         onClickNewNote = viewModel::handleOnClickNewNote,
@@ -70,7 +70,7 @@ fun HomeScreen(
 
 
 @Composable
-private fun Home(
+private fun Notes(
     notes: List<NoteUiModel>,
     onClickNote: (id: Int) -> Unit,
     onClickNewNote: () -> Unit,
@@ -264,7 +264,7 @@ private fun Note(onClick: () -> Unit, text: String, modifier: Modifier = Modifie
 
 @Preview
 @Composable
-private fun HomePreview() {
+private fun NotesPreview() {
     val fakeNotes = listOf(
         NoteUiModel(
             0,
@@ -274,5 +274,5 @@ private fun HomePreview() {
         NoteUiModel(1, "First note")
     )
 
-    Home(fakeNotes, {}, {}, {})
+    Notes(fakeNotes, {}, {}, {})
 }

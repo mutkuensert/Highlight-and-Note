@@ -25,8 +25,8 @@ import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.feature.note.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
-import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeRoute
-import com.mutkuensert.highlightandnote.feature.note.presentation.home.HomeScreen
+import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesRoute
+import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesScreen
 import com.mutkuensert.highlightandnote.theme.HighlightAndNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -82,10 +82,10 @@ class MainActivity : AppCompatActivity() {
         NavHost(
             modifier = modifier.padding(paddingValues),
             navController = navController,
-            startDestination = HomeRoute()
+            startDestination = NotesRoute()
         ) {
-            composable<HomeRoute> {
-                HomeScreen(getSelectedTextInIntent())
+            composable<NotesRoute> {
+                NotesScreen(getSelectedTextInIntent())
             }
 
             composable<DetailRoute> {
