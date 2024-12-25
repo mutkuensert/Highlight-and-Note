@@ -1,7 +1,6 @@
 package com.mutkuensert.highlightandnote.feature.note.data.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -13,7 +12,7 @@ interface NoteDAO {
     suspend fun getAll(): List<NoteClass>
 
     @Query("SELECT * FROM noteclass WHERE uid IN (:noteId)")
-    suspend fun loadById(noteId: Int): NoteClass
+    suspend fun get(noteId: Int): NoteClass
 
     @Insert
     suspend fun insert(vararg notes: NoteClass)

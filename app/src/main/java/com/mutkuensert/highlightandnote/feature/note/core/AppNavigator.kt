@@ -2,8 +2,11 @@ package com.mutkuensert.highlightandnote.feature.note.core
 
 import androidx.navigation.NavHostController
 import com.mutkuensert.highlightandnote.main.MainActivity
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AppNavigator {
+@Singleton
+class AppNavigator @Inject constructor() {
     lateinit var controller: NavHostController
         private set
     private lateinit var activity: MainActivity

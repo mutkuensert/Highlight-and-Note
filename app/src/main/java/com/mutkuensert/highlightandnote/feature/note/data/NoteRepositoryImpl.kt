@@ -15,7 +15,7 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getNote(id: Int): Result<String> {
-        val note = dao.loadById(id).note
+        val note = dao.get(id).note
         return if (note != null) {
             Result.success(note)
         } else {

@@ -7,6 +7,7 @@ import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,6 +47,22 @@ class HomeViewModel @Inject constructor(
 
     fun handleOnClickNewNote() {
         appNavigator.controller.navigate(DetailRoute())
+    }
+
+    fun handleDeleteNote(id: Int) {
+        launchInIo {
+            repository.deleteNote(id)
+            _notes.update { currentNotes ->
+                val newNotes = currentNotes.toMutableList()
+                val itemIndex = currentNotes.indexOfFirst { it.id == id }
+                newNotes.drop(itemIndex)
+                newNotes
+            }
+        }
+    }
+
+    private fun launchInIo(block: suspend CoroutineScope.() -> Unit) {
+        viewModelScope.launch(block = block)
     }
 
     private fun StateFlow<List<NoteUiModel>>.shortenLongNotes(): StateFlow<List<NoteUiModel>> {
