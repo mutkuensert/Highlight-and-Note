@@ -48,10 +48,10 @@ fun NotesScreen(
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
     Notes(
-        notes = notes,
+        notes,
         onClickNote = { noteId -> viewModel.handleOnClickNote(noteId, selectedTextInIntent) },
-        onClickNewNote = viewModel::handleOnClickNewNote,
-        onDeleteNote = viewModel::handleDeleteNote
+        viewModel::handleOnClickNewNote,
+        viewModel::handleDeleteNote
     )
 
     RepeatOnLifecycleEffect(Unit) {

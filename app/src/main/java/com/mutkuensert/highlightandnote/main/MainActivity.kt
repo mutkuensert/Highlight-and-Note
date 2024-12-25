@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appNavigator.setActivity(this)
-
         enableEdgeToEdge()
 
         setContent {
@@ -103,12 +102,11 @@ class MainActivity : AppCompatActivity() {
             val selectedText = getSelectedTextInIntent()
 
             if (selectedText != null) {
-                val result = snackbarHostState
-                    .showSnackbar(
-                        message = getString(R.string.snack_message),
-                        actionLabel = getString(R.string.menu_new),
-                        duration = SnackbarDuration.Long
-                    )
+                val result = snackbarHostState.showSnackbar(
+                    message = getString(R.string.snack_message),
+                    actionLabel = getString(R.string.menu_new),
+                    duration = SnackbarDuration.Long
+                )
 
                 if (result == SnackbarResult.ActionPerformed) {
                     navController.navigate(DetailRoute(text = selectedText))
