@@ -1,11 +1,11 @@
 [versions]
-activity = "1.9.1"
+activity = "1.9.3"
 agp = "8.4.2"
 appcompat = "1.7.0"
-coreKtx = "1.13.1"
-composeBom = "2024.08.00"
+coreKtx = "1.15.0"
+composeBom = "2024.12.01"
 composeHiltNavigation = "1.2.0"
-composeViewModel = "2.8.4"
+composeViewModel = "2.8.7"
 dagger = "2.52"
 espressoCore = "3.6.1"
 junit = "4.13.2"
@@ -13,9 +13,9 @@ junitVersion = "1.2.1"
 kotlin = "2.0.20"
 kotlinKsp = "2.0.20-1.0.24"
 kotlinSerialization = "1.7.1"
-navigation = "2.8.0-rc01"
+navigation = "2.8.5"
 room = "2.6.1"
-uiTooling = "1.6.8"
+uiTooling = "1.7.6"
 
 [libraries]
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
