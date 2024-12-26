@@ -1,7 +1,7 @@
 package com.mutkuensert.highlightandnote.feature.note.data
 
 import com.mutkuensert.highlightandnote.core.coroutines.withIo
-import com.mutkuensert.highlightandnote.feature.note.data.database.NoteClass
+import com.mutkuensert.highlightandnote.feature.note.data.database.NoteEntity
 import com.mutkuensert.highlightandnote.feature.note.data.database.NoteDAO
 import com.mutkuensert.highlightandnote.feature.note.domain.Note
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
@@ -25,7 +25,7 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateNote(id: Int, text: String) = withIo {
-        val note = NoteClass(note = text)
+        val note = NoteEntity(note = text)
         note.uid = id
         dao.update(note)
     }
@@ -35,6 +35,6 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveNewNote(text: String) = withIo {
-        dao.insert(NoteClass(text))
+        dao.insert(NoteEntity(text))
     }
 }

@@ -9,16 +9,16 @@ import androidx.room.Update
 interface NoteDAO {
 
     @Query("SELECT * FROM noteclass ORDER BY uid DESC")
-    suspend fun getAll(): List<NoteClass>
+    suspend fun getAll(): List<NoteEntity>
 
     @Query("SELECT * FROM noteclass WHERE uid IN (:noteId)")
-    suspend fun get(noteId: Int): NoteClass
+    suspend fun get(noteId: Int): NoteEntity
 
     @Insert
-    suspend fun insert(vararg notes: NoteClass)
+    suspend fun insert(vararg notes: NoteEntity)
 
     @Update
-    suspend fun update(vararg note: NoteClass)
+    suspend fun update(vararg note: NoteEntity)
 
     @Query("DELETE FROM noteclass WHERE uid=:id")
     suspend fun delete(id: Int)

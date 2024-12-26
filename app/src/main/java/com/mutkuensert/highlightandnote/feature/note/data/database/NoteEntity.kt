@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class NoteClass(
+@Entity(tableName = "NoteClass")
+data class NoteEntity(
     @ColumnInfo(name = "note")
     val note: String?
 ) {
