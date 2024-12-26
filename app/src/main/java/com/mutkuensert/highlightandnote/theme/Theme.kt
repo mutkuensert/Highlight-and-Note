@@ -8,8 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    background = Color.Black,
-    surface = Color.Black
+    background = Color(0xFF222222),
+    surface = Color.Black,
+    outline = Color(0xFF464646)
 )
 
 private val LightColorScheme = lightColorScheme(

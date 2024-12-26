@@ -52,7 +52,7 @@ private fun Detail(
     Column(
         Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         Header(
             onClickUndo = onClickUndo,

@@ -1,7 +1,9 @@
 package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,7 +77,7 @@ private fun Notes(
         Column(
             Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
@@ -180,6 +182,17 @@ private fun Note(onClick: () -> Unit, text: String, modifier: Modifier = Modifie
             )
             .clickable(onClick = onClick)
             .background(MaterialTheme.colorScheme.background)
+            .then(
+                if (isSystemInDarkTheme()) {
+                    Modifier.border(
+                        1.dp,
+                        MaterialTheme.colorScheme.outline,
+                        MaterialTheme.shapes.medium
+                    )
+                } else {
+                    Modifier
+                }
+            )
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
