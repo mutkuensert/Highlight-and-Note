@@ -21,6 +21,8 @@ build/
 
 # Local configuration file (sdk path, etc)
 local.properties
+keystore.properties
+keystore.jks
 
 # Log Files
 *.log
