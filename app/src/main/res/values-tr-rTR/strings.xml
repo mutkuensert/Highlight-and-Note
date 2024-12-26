@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="menu_new">Yeni</string>
-    <string name="menu_del">Sil</string>
     <string name="snack_message">Metin ile yeni not oluşturulsun mu?</string>
     <string name="note_saved">Not kaydedildi.</string>
     <string name="note_deleted">Not silindi.</string>
     <string name="note_hint">Not</string>
     <string name="new_note_icon_button_content_description">Yeni bir not oluşturun.</string>
     <string name="delete_note_icon_button_content_description">Bu notu silin.</string>
+    <string name="do_you_want_to_undo_deletion">Silme işlemini geri almak ister misiniz?</string>
+    <string name="undo">Geri al</string>
+    <string name="delete">Sil</string>
+    <string name="do_you_want_to_delete_your_note">Notunuzu silmek istiyor musunuz?</string>
+    <string name="cancel">İptal</string>
 </resources>
