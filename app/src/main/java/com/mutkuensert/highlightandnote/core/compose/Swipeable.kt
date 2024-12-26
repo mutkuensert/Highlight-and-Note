@@ -23,7 +23,7 @@ fun Swipeable(
     snackbarConfig: SnackbarConfig,
     modifier: Modifier = Modifier,
     swipeableConfig: SwipeableConfig = SwipeableConfig(),
-    backgroundContent: @Composable() (RowScope.() -> Unit),
+    backgroundContent: @Composable RowScope.() -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
