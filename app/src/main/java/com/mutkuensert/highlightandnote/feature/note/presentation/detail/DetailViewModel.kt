@@ -51,8 +51,8 @@ class DetailViewModel @Inject constructor(
 
                     _uiModel.update { it.copy(text = textWithAdditionalText) }
                 }
-            } else {
-                _uiModel.update { it.copy(text = route.text ?: "") }
+            } else if (route.text != null) {
+                _uiModel.update { it.copy(text = route.text) }
             }
         }
     }
