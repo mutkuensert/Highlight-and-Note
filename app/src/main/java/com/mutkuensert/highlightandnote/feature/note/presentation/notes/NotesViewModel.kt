@@ -7,8 +7,6 @@ import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +29,7 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun getNotes() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _notes.update { repository.getNotes().map { NoteUiModel(it.id, it.text) } }
         }
     }
@@ -50,7 +48,7 @@ class NotesViewModel @Inject constructor(
     }
 
     fun handleDeleteNote(id: Int) {
-        launchInIo {
+        viewModelScope.launch {
             repository.deleteNote(id)
             _notes.update { currentNotes ->
                 val newNotes = currentNotes.toMutableList()
@@ -59,10 +57,6 @@ class NotesViewModel @Inject constructor(
                 newNotes
             }
         }
-    }
-
-    private fun launchInIo(block: suspend CoroutineScope.() -> Unit) {
-        viewModelScope.launch(block = block)
     }
 
     private fun StateFlow<List<NoteUiModel>>.shortenLongNotes(): StateFlow<List<NoteUiModel>> {

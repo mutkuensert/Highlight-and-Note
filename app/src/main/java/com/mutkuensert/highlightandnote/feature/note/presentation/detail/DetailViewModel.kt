@@ -8,7 +8,6 @@ import com.mutkuensert.highlightandnote.core.AppNavigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,7 +40,7 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun getNote() {
-        launchInIo {
+        viewModelScope.launch {
             if (id != null) {
                 repository.getNote(id!!).onSuccess { text ->
                     var textWithAdditionalText = text
@@ -69,7 +68,7 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun listenAndKeepChangesInHistory() {
-        launchInIo {
+        viewModelScope.launch {
             uiModel.drop(1) //Drop initial ui model
                 .debounce(500)
                 .collect {
@@ -79,7 +78,7 @@ class DetailViewModel @Inject constructor(
     }
 
     fun handleDeleteClick() {
-        launchInIo {
+        viewModelScope.launch {
             repository.deleteNote(id!!)
             appNavigator.controller.popBackStack()
         }
@@ -90,7 +89,7 @@ class DetailViewModel @Inject constructor(
     }
 
     fun handleBackClick() {
-        launchInIo {
+        viewModelScope.launch {
             if (id != null) {
                 updateNote()
             } else {
@@ -106,18 +105,14 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun updateNote() {
-        launchInIo {
+        viewModelScope.launch {
             repository.updateNote(id!!, uiModel.value.text)
         }
     }
 
     private fun saveNewNote() {
-        launchInIo {
+        viewModelScope.launch {
             repository.saveNewNote(uiModel.value.text)
         }
-    }
-
-    private fun launchInIo(block: suspend CoroutineScope.() -> Unit) {
-        viewModelScope.launch(block = block)
     }
 }
