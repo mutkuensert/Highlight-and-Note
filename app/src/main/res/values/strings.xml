@@ -2,12 +2,16 @@
     <string name="app_name" translatable="false">Highlight &amp; Note</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="menu_new">New</string>
-    <string name="menu_del">Delete</string>
     <string name="snack_message">Create a new note with the text?</string>
     <string name="note_saved">Note saved.</string>
     <string name="note_deleted">Note deleted.</string>
     <string name="note_hint">Note</string>
     <string name="new_note_icon_button_content_description">Create a new note.</string>
     <string name="delete_note_icon_button_content_description">Delete this note.</string>
+    <string name="do_you_want_to_undo_deletion">Do you want to undo deletion?</string>
+    <string name="undo">Undo</string>
+    <string name="delete">Delete</string>
+    <string name="do_you_want_to_delete_your_note">Do you want to delete your note?</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
