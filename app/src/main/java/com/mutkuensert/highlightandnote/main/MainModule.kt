@@ -1,6 +1,6 @@
 package com.mutkuensert.highlightandnote.main
 
-import com.mutkuensert.highlightandnote.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.Navigator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ object MainModule {
 
     @Provides
     @ActivityRetainedScoped
-    fun provideAppNavigator() = AppNavigator()
+    fun provideAppNavigator() = Navigator()
 }

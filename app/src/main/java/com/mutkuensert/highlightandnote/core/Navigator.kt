@@ -3,10 +3,8 @@ package com.mutkuensert.highlightandnote.core
 import androidx.navigation.NavHostController
 import com.mutkuensert.highlightandnote.main.MainActivity
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AppNavigator @Inject constructor() {
+class Navigator @Inject constructor() {
     lateinit var controller: NavHostController
         private set
     private lateinit var activity: MainActivity
@@ -19,7 +17,7 @@ class AppNavigator @Inject constructor() {
         this.activity = activity
     }
 
-    fun finish() {
+    fun closeApp() {
         activity.finish()
     }
 }

@@ -10,5 +10,8 @@
     <string name="delete_note_icon_button_content_description">Delete this note.</string>
     <string name="do_you_want_to_undo_deletion">Do you want to undo deletion?</string>
     <string name="undo">Undo</string>
+    <string name="delete">Delete</string>
+    <string name="do_you_want_to_delete_your_note">Do you want to delete your note?</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

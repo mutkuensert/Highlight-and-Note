@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mutkuensert.highlightandnote.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.Navigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val repository: NoteRepository,
-    private val appNavigator: AppNavigator,
+    private val navigator: Navigator,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val route = savedStateHandle.toRoute<DetailRoute>()
@@ -79,8 +79,15 @@ class DetailViewModel @Inject constructor(
 
     fun handleDeleteClick() {
         viewModelScope.launch {
-            repository.deleteNote(id!!)
-            appNavigator.controller.popBackStack()
+            if (id != null) {
+                repository.deleteNote(id!!)
+            }
+
+            if (route.highlightedText != null) {
+                navigator.closeApp()
+            } else {
+                navigator.controller.popBackStack()
+            }
         }
     }
 
@@ -97,9 +104,9 @@ class DetailViewModel @Inject constructor(
             }
 
             if (route.highlightedText != null) {
-                appNavigator.finish()
+                navigator.closeApp()
             } else {
-                appNavigator.controller.popBackStack()
+                navigator.controller.popBackStack()
             }
         }
     }

@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mutkuensert.highlightandnote.R
-import com.mutkuensert.highlightandnote.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.Navigator
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
 import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesRoute
@@ -34,11 +34,11 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     @Inject
-    lateinit var appNavigator: AppNavigator
+    lateinit var navigator: Navigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appNavigator.setActivity(this)
+        navigator.setActivity(this)
         enableEdgeToEdge()
 
         setContent {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val navController = rememberNavController()
 
         LaunchedEffect(navController) {
-            appNavigator.setNavHostController(navController)
+            navigator.setNavHostController(navController)
         }
 
         val snackbarHostState = remember { SnackbarHostState() }

@@ -9,4 +9,7 @@
     <string name="delete_note_icon_button_content_description">Bu notu silin.</string>
     <string name="do_you_want_to_undo_deletion">Silme işlemini geri almak ister misiniz?</string>
     <string name="undo">Geri al</string>
+    <string name="delete">Sil</string>
+    <string name="do_you_want_to_delete_your_note">Notunuzu silmek istiyor musunuz?</string>
+    <string name="cancel">İptal</string>
 </resources>

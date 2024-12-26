@@ -2,7 +2,7 @@ package com.mutkuensert.highlightandnote.feature.note.presentation.notes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mutkuensert.highlightandnote.core.AppNavigator
+import com.mutkuensert.highlightandnote.core.Navigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class NotesViewModel @Inject constructor(
     private val repository: NoteRepository,
-    private val appNavigator: AppNavigator,
+    private val navigator: Navigator,
 ) : ViewModel() {
     private val _notes = MutableStateFlow<List<NoteUiModel>>(emptyList())
     val notes = _notes.asStateFlow().shortenLongNotes()
@@ -35,11 +35,11 @@ class NotesViewModel @Inject constructor(
     }
 
     fun handleOnClickNote(id: Int, highlightedTextInIntent: String?) {
-        appNavigator.controller.navigate(DetailRoute(id, highlightedTextInIntent))
+        navigator.controller.navigate(DetailRoute(id, highlightedTextInIntent))
     }
 
     fun handleOnClickNewNote() {
-        appNavigator.controller.navigate(DetailRoute())
+        navigator.controller.navigate(DetailRoute())
     }
 
     fun handleDeleteNote(id: Int) {
