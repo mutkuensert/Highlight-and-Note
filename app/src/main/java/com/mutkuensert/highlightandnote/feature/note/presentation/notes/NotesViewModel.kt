@@ -34,13 +34,8 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    fun handleOnClickNote(id: Int, selectedTextInIntent: String?) {
-        appNavigator.controller.navigate(
-            DetailRoute(
-                id = id,
-                text = selectedTextInIntent
-            )
-        )
+    fun handleOnClickNote(id: Int, highlightedTextInIntent: String?) {
+        appNavigator.controller.navigate(DetailRoute(id, highlightedTextInIntent))
     }
 
     fun handleOnClickNewNote() {

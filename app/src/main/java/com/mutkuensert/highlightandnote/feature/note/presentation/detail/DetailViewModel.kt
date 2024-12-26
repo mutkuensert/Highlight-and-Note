@@ -43,16 +43,16 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             if (id != null) {
                 repository.getNote(id!!).onSuccess { text ->
-                    var textWithAdditionalText = text
+                    var noteAndHighlightedText = text
 
-                    if (route.text != null) {
-                        textWithAdditionalText = "$text\n\n${route.text}"
+                    if (route.highlightedText != null) {
+                        noteAndHighlightedText += "\n\n${route.highlightedText}"
                     }
 
-                    _uiModel.update { it.copy(text = textWithAdditionalText) }
+                    _uiModel.update { it.copy(text = noteAndHighlightedText) }
                 }
-            } else if (route.text != null) {
-                _uiModel.update { it.copy(text = route.text) }
+            } else if (route.highlightedText != null) {
+                _uiModel.update { it.copy(text = route.highlightedText) }
             }
         }
     }
@@ -96,7 +96,7 @@ class DetailViewModel @Inject constructor(
                 saveNewNote()
             }
 
-            if (route.text != null) {
+            if (route.highlightedText != null) {
                 appNavigator.finish()
             } else {
                 appNavigator.controller.popBackStack()

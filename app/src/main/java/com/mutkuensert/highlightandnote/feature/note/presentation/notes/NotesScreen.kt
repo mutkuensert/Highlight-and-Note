@@ -42,14 +42,14 @@ import com.mutkuensert.highlightandnote.theme.appColors
 
 @Composable
 fun NotesScreen(
-    selectedTextInIntent: String?,
+    highlightedTextInIntent: String?,
     viewModel: NotesViewModel = hiltViewModel()
 ) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
 
     Notes(
         notes,
-        onClickNote = { noteId -> viewModel.handleOnClickNote(noteId, selectedTextInIntent) },
+        onClickNote = { noteId -> viewModel.handleOnClickNote(noteId, highlightedTextInIntent) },
         viewModel::handleOnClickNewNote,
         viewModel::handleDeleteNote
     )

@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        SelectedTextHandler(snackbarHostState, navController)
+        HighlightedTextHandler(snackbarHostState, navController)
     }
 
     @Composable
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             startDestination = NotesRoute()
         ) {
             composable<NotesRoute> {
-                NotesScreen(getSelectedTextInIntent())
+                NotesScreen(getHighlightedTextInIntent())
             }
 
             composable<DetailRoute> {
@@ -94,14 +94,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun SelectedTextHandler(
+    private fun HighlightedTextHandler(
         snackbarHostState: SnackbarHostState,
         navController: NavController
     ) {
         LaunchedEffect(Unit) {
-            val selectedText = getSelectedTextInIntent()
+            val highlightedText = getHighlightedTextInIntent()
 
-            if (selectedText != null) {
+            if (highlightedText != null) {
                 val result = snackbarHostState.showSnackbar(
                     message = getString(R.string.snack_message),
                     actionLabel = getString(R.string.menu_new),
@@ -109,13 +109,13 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {
-                    navController.navigate(DetailRoute(text = selectedText))
+                    navController.navigate(DetailRoute(id = null, highlightedText))
                 }
             }
         }
     }
 
-    private fun getSelectedTextInIntent(): String? {
+    private fun getHighlightedTextInIntent(): String? {
         val action = intent.action
 
         if (action.equals(Intent.ACTION_PROCESS_TEXT) || action.equals(Intent.ACTION_SEND)) {
