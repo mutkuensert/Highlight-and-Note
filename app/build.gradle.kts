@@ -21,6 +21,7 @@ android {
         targetSdk = 36
         versionCode = 8
         versionName = "2.0.1"
+        setProperty("archivesBaseName", "Highlight&Note_v$versionName($versionCode)")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
