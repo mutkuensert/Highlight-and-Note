@@ -7,7 +7,6 @@ import androidx.navigation.toRoute
 import com.mutkuensert.highlightandnote.core.Navigator
 import com.mutkuensert.highlightandnote.feature.note.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -23,8 +23,8 @@ class DetailViewModel @Inject constructor(
     private val navigator: Navigator,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val route = savedStateHandle.toRoute<DetailRoute>()
-    private val id: Int? get() = route.id
+    private val navArgs = savedStateHandle.toRoute<DetailNavArgs>()
+    private val id: Int? get() = navArgs.id
 
     private val _uiModel = MutableStateFlow(DetailUiModel.initial())
     val uiModel = _uiModel.asStateFlow()
@@ -45,14 +45,14 @@ class DetailViewModel @Inject constructor(
                 repository.getNote(id!!).onSuccess { text ->
                     var noteAndHighlightedText = text
 
-                    if (route.highlightedText != null) {
-                        noteAndHighlightedText += "\n\n${route.highlightedText}"
+                    if (navArgs.receivedHighlightedText != null) {
+                        noteAndHighlightedText += "\n\n${navArgs.receivedHighlightedText}"
                     }
 
                     _uiModel.update { it.copy(text = noteAndHighlightedText) }
                 }
-            } else if (route.highlightedText != null) {
-                _uiModel.update { it.copy(text = route.highlightedText) }
+            } else if (navArgs.receivedHighlightedText != null) {
+                _uiModel.update { it.copy(text = navArgs.receivedHighlightedText) }
             }
         }
     }
@@ -83,7 +83,7 @@ class DetailViewModel @Inject constructor(
                 repository.deleteNote(id!!)
             }
 
-            if (route.highlightedText != null) {
+            if (navArgs.receivedHighlightedText != null) {
                 navigator.closeApp()
             } else {
                 navigator.controller.popBackStack()
@@ -99,11 +99,11 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             if (id != null) {
                 updateNote()
-            } else {
+            } else if (uiModel.value.text.isNotBlank()) {
                 saveNewNote()
             }
 
-            if (route.highlightedText != null) {
+            if (navArgs.receivedHighlightedText != null) {
                 navigator.closeApp()
             } else {
                 navigator.controller.popBackStack()
