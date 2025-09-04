@@ -23,7 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mutkuensert.highlightandnote.R
 import com.mutkuensert.highlightandnote.core.Navigator
-import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailRoute
+import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailNavArgs
 import com.mutkuensert.highlightandnote.feature.note.presentation.detail.DetailScreen
 import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesRoute
 import com.mutkuensert.highlightandnote.feature.note.presentation.notes.NotesScreen
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 NotesScreen(getHighlightedTextInIntent())
             }
 
-            composable<DetailRoute> {
+            composable<DetailNavArgs> {
                 DetailScreen()
             }
         }
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {
-                    navController.navigate(DetailRoute(id = null, highlightedText))
+                    navController.navigate(DetailNavArgs(id = null, highlightedText))
                 }
             }
         }
