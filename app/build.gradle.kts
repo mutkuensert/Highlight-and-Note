@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -12,12 +13,12 @@ plugins {
 
 android {
     namespace = "com.mutkuensert.highlightandnote"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mutkuensert.highlightandnote"
         minSdk = 23
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 7
         versionName = "2.0.0"
 
@@ -54,8 +55,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_1_8
+        }
     }
 
     buildFeatures {

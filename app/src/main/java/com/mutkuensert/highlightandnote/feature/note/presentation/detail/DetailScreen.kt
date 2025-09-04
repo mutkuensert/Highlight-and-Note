@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.Delete
@@ -61,6 +62,7 @@ private fun Detail(
     Column(
         Modifier
             .fillMaxSize()
+            .imePadding()
             .background(MaterialTheme.colorScheme.surface)
     ) {
         Header(
